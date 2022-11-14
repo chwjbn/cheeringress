@@ -1,0 +1,15 @@
+version: '3'
+services:
+    cheer-gateway-admin:
+      image: harbor.aiagain.com/ik-arch/cheer-ingress:prod
+      ports:
+        - 28888:28888
+      volumes:
+        - ./data:/data/app/log
+      environment:
+        - cheerenv_app_mode=worker
+        - cheerenv_skyapm_oap_grpc_addr=master
+        - cheerenv_server_addr=0.0.0.0
+        - cheerenv_server_port=28888
+        - cheerenv_master_host=http://127.0.0.1:28808              #master节点可以访问的地址
+        - cheerenv_namespace_id=a62624e2b29fee272fab2f02ca379b92   #从master管理后台获取到的网关空间ID
