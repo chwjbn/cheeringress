@@ -131,3 +131,26 @@ func SpanBeginDbService(ctx context.Context,operName string) go4sky.Span  {
 	return xSpan
 
 }
+
+func SpanBeginBizFunction(ctx context.Context,operName string) go4sky.Span  {
+
+	var xSpan go4sky.Span
+
+	xSkyapmTracer:=go4sky.GetGlobalTracer()
+	if xSkyapmTracer==nil{
+		return xSpan
+	}
+
+	xSpan, _, _ = xSkyapmTracer.CreateLocalSpan(ctx)
+	if xSpan==nil{
+		return xSpan
+	}
+
+	xSpan.SetComponent(0)
+	xSpan.SetOperationName(operName)
+	xSpan.SetPeer(fmt.Sprintf("%s@%s",cheerlib.OsIPV4(),cheerlib.OsHostName()))
+	xSpan.SetSpanLayer(agentv3.SpanLayer_RPCFramework)
+
+	return xSpan
+
+}

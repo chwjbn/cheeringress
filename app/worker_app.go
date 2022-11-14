@@ -4,6 +4,7 @@ import (
 	"github.com/chwjbn/cheeringress/app/protocol"
 	"github.com/chwjbn/cheeringress/app/worker/workerservice"
 	"github.com/chwjbn/cheeringress/app/worker/workerutil"
+	"github.com/chwjbn/cheeringress/cheerapp"
 	"github.com/chwjbn/cheeringress/cheerlib"
 	"github.com/chwjbn/cheeringress/config"
 	"fmt"
@@ -59,6 +60,11 @@ func (this *CheerWorkerApp) runService() error {
 
 func (this *CheerWorkerApp) onHttpRequest(ctx *gin.Context) {
 
+	xSpan:=cheerapp.SpanBeginBizFunction(ctx.Request.Context(),"CheerWorkerApp.onHttpRequest")
+	defer func() {
+		cheerapp.SpanEnd(xSpan)
+	}()
+
 	xSiteInfo := this.getMatchedSiteInfo(ctx)
 	if len(xSiteInfo.DataId) < 1 {
 		workerutil.ActionShowErrorPage(ctx, 406, "200406", "系统升级或者访问用户超出系统限制,服务暂时不可用.")
@@ -83,6 +89,11 @@ func (this *CheerWorkerApp) onHttpRequest(ctx *gin.Context) {
 
 func (this *CheerWorkerApp) checkSiteAuth(ctx *gin.Context, siteInfo protocol.WorkerDataSite) bool {
 
+	xSpan:=cheerapp.SpanBeginBizFunction(ctx.Request.Context(),"CheerWorkerApp.checkSiteAuth")
+	defer func() {
+		cheerapp.SpanEnd(xSpan)
+	}()
+
 	bRet := false
 
 	if !strings.EqualFold(siteInfo.AuthNeed, "yes") {
@@ -105,6 +116,13 @@ func (this *CheerWorkerApp) checkSiteAuth(ctx *gin.Context, siteInfo protocol.Wo
 }
 
 func (this *CheerWorkerApp) processAction(ctx *gin.Context, actionType string, actionData string) {
+
+	xSpan:=cheerapp.SpanBeginBizFunction(ctx.Request.Context(),"CheerWorkerApp.processAction")
+	defer func() {
+		cheerapp.SpanEnd(xSpan)
+	}()
+
+	cheerapp.LogInfoWithContext(ctx.Request.Context(),"CheerWorkerApp.processAction actionType=[%s],actionData=[%v]",actionType,actionData)
 
 	if strings.EqualFold(actionType, "backend") {
 
@@ -141,6 +159,11 @@ func (this *CheerWorkerApp) processAction(ctx *gin.Context, actionType string, a
 
 func (this *CheerWorkerApp) processActionStatic(ctx *gin.Context, staticInfo protocol.WorkerDataActionStatic) {
 
+	xSpan:=cheerapp.SpanBeginBizFunction(ctx.Request.Context(),"CheerWorkerApp.processActionStatic")
+	defer func() {
+		cheerapp.SpanEnd(xSpan)
+	}()
+
 	xStaticContent := staticInfo.Data
 	if strings.EqualFold(staticInfo.DataType, "Base64Data") {
 		xStaticContent = cheerlib.EncryptBase64Decode(xStaticContent)
@@ -151,6 +174,11 @@ func (this *CheerWorkerApp) processActionStatic(ctx *gin.Context, staticInfo pro
 }
 
 func (this *CheerWorkerApp) processActionBackend(ctx *gin.Context, backendInfo protocol.WorkerDataActionBackend, backendNodeInfoList []protocol.WorkerDataActionBackendNode) {
+
+	xSpan:=cheerapp.SpanBeginBizFunction(ctx.Request.Context(),"CheerWorkerApp.processActionBackend")
+	defer func() {
+		cheerapp.SpanEnd(xSpan)
+	}()
 
 	xBackendNodeInfo := protocol.WorkerDataActionBackendNode{}
 
@@ -193,14 +221,23 @@ func (this *CheerWorkerApp) processActionBackend(ctx *gin.Context, backendInfo p
 
 func (this *CheerWorkerApp) getMatchedSiteInfo(ctx *gin.Context) protocol.WorkerDataSite {
 
+	xSpan:=cheerapp.SpanBeginBizFunction(ctx.Request.Context(),"CheerWorkerApp.getMatchedSiteInfo")
+	defer func() {
+		cheerapp.SpanEnd(xSpan)
+	}()
+
 	xSiteInfo := protocol.WorkerDataSite{}
 
 	xSiteHost := ctx.Request.Host
+
+	cheerapp.LogInfoWithContext(ctx.Request.Context(),"CheerWorkerApp.getMatchedSiteInfo xSiteHost=[%s]",xSiteHost)
 
 	xConfigSiteInfoList := this.mConfigService.GetSiteInfoList()
 	if len(xConfigSiteInfoList) < 1 {
 		return xSiteInfo
 	}
+
+	cheerapp.LogInfoWithContext(ctx.Request.Context(),"CheerWorkerApp.getMatchedSiteInfo xConfigSiteInfoList.Count=[%d]",len(xConfigSiteInfoList))
 
 	for _, xConfigSiteInfo := range xConfigSiteInfoList {
 
@@ -210,12 +247,21 @@ func (this *CheerWorkerApp) getMatchedSiteInfo(ctx *gin.Context) protocol.Worker
 		}
 	}
 
+	cheerapp.LogInfoWithContext(ctx.Request.Context(),"CheerWorkerApp.getMatchedSiteInfo xSiteInfo.DataId=[%s]",xSiteInfo.DataId)
+
 	return xSiteInfo
 }
 
 func (this *CheerWorkerApp) getMatchedSiteRuleInfo(ctx *gin.Context, siteId string) protocol.WorkerDataSiteRule {
 
+	xSpan:=cheerapp.SpanBeginBizFunction(ctx.Request.Context(),"CheerWorkerApp.getMatchedSiteRuleInfo")
+	defer func() {
+		cheerapp.SpanEnd(xSpan)
+	}()
+
 	xSiteRuleInfo := protocol.WorkerDataSiteRule{}
+
+	cheerapp.LogInfoWithContext(ctx.Request.Context(),"CheerWorkerApp.getMatchedSiteRuleInfo siteId=[%s]",siteId)
 
 	xSiteRuleInfoList := this.mConfigService.GetSiteRuleInfo(siteId)
 	if len(xSiteRuleInfoList) < 1 {
@@ -245,6 +291,8 @@ func (this *CheerWorkerApp) getMatchedSiteRuleInfo(ctx *gin.Context, siteId stri
 			break
 		}
 	}
+
+	cheerapp.LogInfoWithContext(ctx.Request.Context(),"CheerWorkerApp.xSiteRuleInfo xSiteRuleInfo.DataId=[%s]",xSiteRuleInfo.DataId)
 
 	return xSiteRuleInfo
 }

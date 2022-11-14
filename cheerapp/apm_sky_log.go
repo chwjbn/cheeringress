@@ -9,29 +9,29 @@ import (
 
 
 func LogInfo(logFmt string,args ...interface{})  {
-	LogInfoWithContext(context.Background(),logFmt,args)
+	LogInfoWithContext(context.Background(),logFmt,args...)
 }
 
 
 func LogWarn(logFmt string,args ...interface{})  {
-	LogWarnWithContext(context.Background(),logFmt,args)
+	LogWarnWithContext(context.Background(),logFmt,args...)
 }
 
 func LogError(logFmt string,args ...interface{})  {
-	LogErrorWithContext(context.Background(),logFmt,args)
+	LogErrorWithContext(context.Background(),logFmt,args...)
 }
 
 
 func LogInfoWithContext(ctx context.Context,logFmt string,args ...interface{})  {
-	writeLogWithContext(ctx,"INFO",logFmt)
+	writeLogWithContext(ctx,"INFO",logFmt,args...)
 }
 
 func LogWarnWithContext(ctx context.Context,logFmt string,args ...interface{})  {
-	writeLogWithContext(ctx,"WARN",logFmt)
+	writeLogWithContext(ctx,"WARN",logFmt,args...)
 }
 
 func LogErrorWithContext(ctx context.Context,logFmt string,args ...interface{})  {
-	writeLogWithContext(ctx,"ERROR",logFmt)
+	writeLogWithContext(ctx,"ERROR",logFmt,args...)
 }
 
 func writeLogWithContext(ctx context.Context,logLevel string,logFmt string,args ...interface{})  {
@@ -39,7 +39,7 @@ func writeLogWithContext(ctx context.Context,logLevel string,logFmt string,args 
 	xLogContent:=fmt.Sprintf("[%s][%s]",cheerlib.TimeGetNow(),logLevel)+logFmt
 
 	if len(args)>0{
-		xLogContent=fmt.Sprintf("[%s][%s]",cheerlib.TimeGetNow(),logLevel)+fmt.Sprintf(logFmt,args)
+		xLogContent=fmt.Sprintf("[%s][%s]",cheerlib.TimeGetNow(),logLevel)+fmt.Sprintf(logFmt,args...)
 	}
 
 	writeLogContent(ctx,xLogContent)
