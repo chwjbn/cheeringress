@@ -1,0 +1,4 @@
+server_addr: 0.0.0.0
+server_port: 16666
+
+db_app_mongodb_uri: mongodb://127.0.0.1:30000/db_cheer_ingress
