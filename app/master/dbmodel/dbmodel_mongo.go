@@ -1,8 +1,8 @@
 package dbmodel
 
 import (
-	"github.com/chwjbn/cheeringress/cheerlib"
 	"fmt"
+	"github.com/chwjbn/cheeringress/cheerlib"
 )
 
 type IDbModelMongo interface {

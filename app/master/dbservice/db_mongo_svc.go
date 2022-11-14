@@ -1,12 +1,12 @@
 package dbservice
 
 import (
-	"github.com/chwjbn/cheeringress/app/master/dbmodel"
-	"github.com/chwjbn/cheeringress/cheerapp"
-	"github.com/chwjbn/cheeringress/cheerlib"
 	"context"
 	"errors"
 	"fmt"
+	"github.com/chwjbn/cheeringress/app/master/dbmodel"
+	"github.com/chwjbn/cheeringress/cheerapp"
+	"github.com/chwjbn/cheeringress/cheerlib"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
@@ -31,15 +31,14 @@ func NewDbMongoSvc(dbUri string) (error, *DbMongoSvc) {
 
 	xThis := &DbMongoSvc{}
 	xThis.mDbUri = dbUri
-	xError=xThis.initClient()
+	xError = xThis.initClient()
 
-	if xError!=nil{
-		return xError,nil
+	if xError != nil {
+		return xError, nil
 	}
 
 	return xError, xThis
 }
-
 
 func (this *DbMongoSvc) initClient() error {
 
@@ -69,16 +68,16 @@ func (this *DbMongoSvc) initClient() error {
 
 }
 
-func (this *DbMongoSvc) GetDbHandle(ctx context.Context,dbName string) (error, *mongo.Database) {
+func (this *DbMongoSvc) GetDbHandle(ctx context.Context, dbName string) (error, *mongo.Database) {
 
 	xDbHandle := this.mDbClient.Database(dbName)
 
 	return nil, xDbHandle
 }
 
-func (this *DbMongoSvc) GetTableHandle(ctx context.Context,dbName string, tableName string) (error, *mongo.Collection) {
+func (this *DbMongoSvc) GetTableHandle(ctx context.Context, dbName string, tableName string) (error, *mongo.Collection) {
 
-	xErr, xDbHandle := this.GetDbHandle(ctx,dbName)
+	xErr, xDbHandle := this.GetDbHandle(ctx, dbName)
 
 	if xErr != nil {
 		return xErr, nil
@@ -88,7 +87,7 @@ func (this *DbMongoSvc) GetTableHandle(ctx context.Context,dbName string, tableN
 }
 
 //确保数据索引是创建的
-func (this *DbMongoSvc) CheckAppDataIndexs(ctx context.Context,data dbmodel.IDbModelMongo) error {
+func (this *DbMongoSvc) CheckAppDataIndexs(ctx context.Context, data dbmodel.IDbModelMongo) error {
 
 	var xError error = nil
 
@@ -99,7 +98,7 @@ func (this *DbMongoSvc) CheckAppDataIndexs(ctx context.Context,data dbmodel.IDbM
 		return xError
 	}
 
-	xError, xTableHandle := this.GetTableHandle(ctx,data.GetDbName(), data.GetTableName())
+	xError, xTableHandle := this.GetTableHandle(ctx, data.GetDbName(), data.GetTableName())
 	if xError != nil {
 		return xError
 	}
@@ -191,25 +190,25 @@ func (this *DbMongoSvc) CheckAppDataIndexs(ctx context.Context,data dbmodel.IDbM
 }
 
 //获取一个数据对象，带条件和排序
-func (this *DbMongoSvc) GetAppDataWithWhereAndOrder(ctx context.Context,data dbmodel.IDbModelMongo, whereMap map[string]interface{}, sortMap map[string]interface{}) error {
+func (this *DbMongoSvc) GetAppDataWithWhereAndOrder(ctx context.Context, data dbmodel.IDbModelMongo, whereMap map[string]interface{}, sortMap map[string]interface{}) error {
 
 	var xError error = nil
 
-	xSpan:= cheerapp.SpanBeginDbService(ctx,"DbMongoSvc.GetAppDataWithWhereAndOrder")
+	xSpan := cheerapp.SpanBeginDbService(ctx, "DbMongoSvc.GetAppDataWithWhereAndOrder")
 	defer func() {
 
-		if xError!=nil{
-			cheerapp.SpanError(xSpan,xError.Error())
+		if xError != nil {
+			cheerapp.SpanError(xSpan, xError.Error())
 		}
 
 		cheerapp.SpanEnd(xSpan)
 	}()
 
-	cheerapp.SpanTag(xSpan,"_ARG_data",cheerlib.TextStructToJson(data))
-	cheerapp.SpanTag(xSpan,"_ARG_whereMap",cheerlib.TextStructToJson(whereMap))
-	cheerapp.SpanTag(xSpan,"_ARG_sortMap",cheerlib.TextStructToJson(sortMap))
+	cheerapp.SpanTag(xSpan, "_ARG_data", cheerlib.TextStructToJson(data))
+	cheerapp.SpanTag(xSpan, "_ARG_whereMap", cheerlib.TextStructToJson(whereMap))
+	cheerapp.SpanTag(xSpan, "_ARG_sortMap", cheerlib.TextStructToJson(sortMap))
 
-	xError, xTableHandle := this.GetTableHandle(ctx,data.GetDbName(), data.GetTableName())
+	xError, xTableHandle := this.GetTableHandle(ctx, data.GetDbName(), data.GetTableName())
 	if xError != nil {
 		return xError
 	}
@@ -244,7 +243,7 @@ func (this *DbMongoSvc) GetAppDataWithWhereAndOrder(ctx context.Context,data dbm
 }
 
 //根据ID查找数据
-func (this *DbMongoSvc) GetAppDataById(ctx context.Context,data dbmodel.IDbModelMongo) error {
+func (this *DbMongoSvc) GetAppDataById(ctx context.Context, data dbmodel.IDbModelMongo) error {
 
 	xWhere := make(map[string]interface{})
 	xWhere["data_id"] = data.GetDataId()
@@ -252,24 +251,24 @@ func (this *DbMongoSvc) GetAppDataById(ctx context.Context,data dbmodel.IDbModel
 	xSort := make(map[string]interface{})
 	xSort["data_id"] = 1
 
-	return this.GetAppDataWithWhereAndOrder(ctx,data, xWhere, xSort)
+	return this.GetAppDataWithWhereAndOrder(ctx, data, xWhere, xSort)
 
 }
 
 //查询对应条件的数量
-func (this *DbMongoSvc) GetAppDataCount(ctx context.Context,data dbmodel.IDbModelMongo, whereMap map[string]interface{}) int64 {
+func (this *DbMongoSvc) GetAppDataCount(ctx context.Context, data dbmodel.IDbModelMongo, whereMap map[string]interface{}) int64 {
 
 	var xCount int64 = 0
 
-	xSpan:= cheerapp.SpanBeginDbService(ctx,"DbMongoSvc.GetAppDataCount")
+	xSpan := cheerapp.SpanBeginDbService(ctx, "DbMongoSvc.GetAppDataCount")
 	defer func() {
 		cheerapp.SpanEnd(xSpan)
 	}()
 
-	cheerapp.SpanTag(xSpan,"_ARG_data",cheerlib.TextStructToJson(data))
-	cheerapp.SpanTag(xSpan,"_ARG_whereMap",cheerlib.TextStructToJson(whereMap))
+	cheerapp.SpanTag(xSpan, "_ARG_data", cheerlib.TextStructToJson(data))
+	cheerapp.SpanTag(xSpan, "_ARG_whereMap", cheerlib.TextStructToJson(whereMap))
 
-	xError, xTableHandle := this.GetTableHandle(ctx,data.GetDbName(), data.GetTableName())
+	xError, xTableHandle := this.GetTableHandle(ctx, data.GetDbName(), data.GetTableName())
 	if xError != nil {
 		cheerlib.LogError(fmt.Sprintf("DbMongoSvc.GetAppDataCount Error=[%s]", xError.Error()))
 		return xCount
@@ -291,27 +290,27 @@ func (this *DbMongoSvc) GetAppDataCount(ctx context.Context,data dbmodel.IDbMode
 }
 
 //获取一个数据列表，带条件和排序
-func (this *DbMongoSvc) GetAppDataListWithWhereAndOrder(ctx context.Context,data dbmodel.IDbModelMongo, whereMap map[string]interface{}, sortMap map[string]interface{}, fromIndex int64, limitCount int64) (error, []dbmodel.IDbModelMongo) {
+func (this *DbMongoSvc) GetAppDataListWithWhereAndOrder(ctx context.Context, data dbmodel.IDbModelMongo, whereMap map[string]interface{}, sortMap map[string]interface{}, fromIndex int64, limitCount int64) (error, []dbmodel.IDbModelMongo) {
 
 	var xError error = nil
 
-	xSpan:= cheerapp.SpanBeginDbService(ctx,"DbMongoSvc.GetAppDataListWithWhereAndOrder")
+	xSpan := cheerapp.SpanBeginDbService(ctx, "DbMongoSvc.GetAppDataListWithWhereAndOrder")
 	defer func() {
-		if xError!=nil{
-			cheerapp.SpanError(xSpan,xError.Error())
+		if xError != nil {
+			cheerapp.SpanError(xSpan, xError.Error())
 		}
 		cheerapp.SpanEnd(xSpan)
 	}()
 
-	cheerapp.SpanTag(xSpan,"_ARG_data",cheerlib.TextStructToJson(data))
-	cheerapp.SpanTag(xSpan,"_ARG_whereMap",cheerlib.TextStructToJson(whereMap))
-	cheerapp.SpanTag(xSpan,"_ARG_sortMap",cheerlib.TextStructToJson(sortMap))
-	cheerapp.SpanTag(xSpan,"_ARG_fromIndex",cheerlib.TextStructToJson(fromIndex))
-	cheerapp.SpanTag(xSpan,"_ARG_limitCount",cheerlib.TextStructToJson(limitCount))
+	cheerapp.SpanTag(xSpan, "_ARG_data", cheerlib.TextStructToJson(data))
+	cheerapp.SpanTag(xSpan, "_ARG_whereMap", cheerlib.TextStructToJson(whereMap))
+	cheerapp.SpanTag(xSpan, "_ARG_sortMap", cheerlib.TextStructToJson(sortMap))
+	cheerapp.SpanTag(xSpan, "_ARG_fromIndex", cheerlib.TextStructToJson(fromIndex))
+	cheerapp.SpanTag(xSpan, "_ARG_limitCount", cheerlib.TextStructToJson(limitCount))
 
 	xDataList := []dbmodel.IDbModelMongo{}
 
-	xError, xTableHandle := this.GetTableHandle(ctx,data.GetDbName(), data.GetTableName())
+	xError, xTableHandle := this.GetTableHandle(ctx, data.GetDbName(), data.GetTableName())
 	if xError != nil {
 		return xError, xDataList
 	}
@@ -371,11 +370,11 @@ func (this *DbMongoSvc) GetAppDataListWithWhereAndOrder(ctx context.Context,data
 }
 
 //分页获取数据
-func (this *DbMongoSvc) GetDataPageList(ctx context.Context,data dbmodel.IDbModelMongo, whereMap map[string]interface{}, sortMap map[string]interface{}, pageNo int, pageSize int) dbmodel.PageData {
+func (this *DbMongoSvc) GetDataPageList(ctx context.Context, data dbmodel.IDbModelMongo, whereMap map[string]interface{}, sortMap map[string]interface{}, pageNo int, pageSize int) dbmodel.PageData {
 
 	xPageData := dbmodel.PageData{}
 
-	xPageData.TotalCount = this.GetAppDataCount(ctx,data, whereMap)
+	xPageData.TotalCount = this.GetAppDataCount(ctx, data, whereMap)
 	xPageData.PageNo = int64(pageNo)
 	xPageData.PageSize = int64(pageSize)
 	xPageData.Calc()
@@ -383,7 +382,7 @@ func (this *DbMongoSvc) GetDataPageList(ctx context.Context,data dbmodel.IDbMode
 	xFromIndex := (xPageData.PageNo - 1) * xPageData.PageSize
 	xLimitCount := xPageData.PageSize
 
-	xError, xDataList := this.GetAppDataListWithWhereAndOrder(ctx,data, whereMap, sortMap, xFromIndex, xLimitCount)
+	xError, xDataList := this.GetAppDataListWithWhereAndOrder(ctx, data, whereMap, sortMap, xFromIndex, xLimitCount)
 
 	if xError != nil {
 		cheerlib.LogError(fmt.Sprintf("DbMongoSvc.GetDataPageList Error=[%s]", xError.Error()))
@@ -396,28 +395,28 @@ func (this *DbMongoSvc) GetDataPageList(ctx context.Context,data dbmodel.IDbMode
 }
 
 //添加数据
-func (this *DbMongoSvc) AddAppData(ctx context.Context,data dbmodel.IDbModelMongo) (error, string) {
+func (this *DbMongoSvc) AddAppData(ctx context.Context, data dbmodel.IDbModelMongo) (error, string) {
 
 	var xError error = nil
 	xDataId := ""
 
-	xSpan:= cheerapp.SpanBeginDbService(ctx,"DbMongoSvc.AddAppData")
+	xSpan := cheerapp.SpanBeginDbService(ctx, "DbMongoSvc.AddAppData")
 	defer func() {
-		if xError!=nil{
-			cheerapp.SpanError(xSpan,xError.Error())
+		if xError != nil {
+			cheerapp.SpanError(xSpan, xError.Error())
 		}
 		cheerapp.SpanEnd(xSpan)
 	}()
 
-	cheerapp.SpanTag(xSpan,"_ARG_data",cheerlib.TextStructToJson(data))
+	cheerapp.SpanTag(xSpan, "_ARG_data", cheerlib.TextStructToJson(data))
 
 	//检查索引
-	xError = this.CheckAppDataIndexs(ctx,data)
+	xError = this.CheckAppDataIndexs(ctx, data)
 	if xError != nil {
 		return xError, xDataId
 	}
 
-	xError, xTableHandle := this.GetTableHandle(ctx,data.GetDbName(), data.GetTableName())
+	xError, xTableHandle := this.GetTableHandle(ctx, data.GetDbName(), data.GetTableName())
 	if xError != nil {
 		return xError, xDataId
 	}
@@ -450,22 +449,22 @@ func (this *DbMongoSvc) AddAppData(ctx context.Context,data dbmodel.IDbModelMong
 
 }
 
-func (this *DbMongoSvc) UpdateAppData(ctx context.Context,data dbmodel.IDbModelMongo, whereMap map[string]interface{}) error {
+func (this *DbMongoSvc) UpdateAppData(ctx context.Context, data dbmodel.IDbModelMongo, whereMap map[string]interface{}) error {
 
 	var xError error = nil
 
-	xSpan:= cheerapp.SpanBeginDbService(ctx,"DbMongoSvc.UpdateAppData")
+	xSpan := cheerapp.SpanBeginDbService(ctx, "DbMongoSvc.UpdateAppData")
 	defer func() {
-		if xError!=nil{
-			cheerapp.SpanError(xSpan,xError.Error())
+		if xError != nil {
+			cheerapp.SpanError(xSpan, xError.Error())
 		}
 		cheerapp.SpanEnd(xSpan)
 	}()
 
-	cheerapp.SpanTag(xSpan,"_ARG_data",cheerlib.TextStructToJson(data))
-	cheerapp.SpanTag(xSpan,"_ARG_whereMap",cheerlib.TextStructToJson(whereMap))
+	cheerapp.SpanTag(xSpan, "_ARG_data", cheerlib.TextStructToJson(data))
+	cheerapp.SpanTag(xSpan, "_ARG_whereMap", cheerlib.TextStructToJson(whereMap))
 
-	xError, xTableHandle := this.GetTableHandle(ctx,data.GetDbName(), data.GetTableName())
+	xError, xTableHandle := this.GetTableHandle(ctx, data.GetDbName(), data.GetTableName())
 	if xError != nil {
 		return xError
 	}
@@ -485,35 +484,35 @@ func (this *DbMongoSvc) UpdateAppData(ctx context.Context,data dbmodel.IDbModelM
 
 }
 
-func (this *DbMongoSvc) UpdateAppDataById(ctx context.Context,data dbmodel.IDbModelMongo) error {
+func (this *DbMongoSvc) UpdateAppDataById(ctx context.Context, data dbmodel.IDbModelMongo) error {
 
 	var xError error = nil
 
 	xWhereMap := make(map[string]interface{})
 	xWhereMap["data_id"] = data.GetDataId()
 
-	xError = this.UpdateAppData(ctx,data, xWhereMap)
+	xError = this.UpdateAppData(ctx, data, xWhereMap)
 
 	return xError
 
 }
 
-func (this *DbMongoSvc) DeleteAppData(ctx context.Context,data dbmodel.IDbModelMongo, whereMap map[string]interface{}) error {
+func (this *DbMongoSvc) DeleteAppData(ctx context.Context, data dbmodel.IDbModelMongo, whereMap map[string]interface{}) error {
 
 	var xError error = nil
 
-	xSpan:= cheerapp.SpanBeginDbService(ctx,"DbMongoSvc.DeleteAppData")
+	xSpan := cheerapp.SpanBeginDbService(ctx, "DbMongoSvc.DeleteAppData")
 	defer func() {
-		if xError!=nil{
-			cheerapp.SpanError(xSpan,xError.Error())
+		if xError != nil {
+			cheerapp.SpanError(xSpan, xError.Error())
 		}
 		cheerapp.SpanEnd(xSpan)
 	}()
 
-	cheerapp.SpanTag(xSpan,"_ARG_data",cheerlib.TextStructToJson(data))
-	cheerapp.SpanTag(xSpan,"_ARG_whereMap",cheerlib.TextStructToJson(whereMap))
+	cheerapp.SpanTag(xSpan, "_ARG_data", cheerlib.TextStructToJson(data))
+	cheerapp.SpanTag(xSpan, "_ARG_whereMap", cheerlib.TextStructToJson(whereMap))
 
-	xError, xTableHandle := this.GetTableHandle(ctx,data.GetDbName(), data.GetTableName())
+	xError, xTableHandle := this.GetTableHandle(ctx, data.GetDbName(), data.GetTableName())
 	if xError != nil {
 		return xError
 	}
@@ -533,14 +532,14 @@ func (this *DbMongoSvc) DeleteAppData(ctx context.Context,data dbmodel.IDbModelM
 
 }
 
-func (this *DbMongoSvc) DeleteAppDataById(ctx context.Context,data dbmodel.IDbModelMongo) error {
+func (this *DbMongoSvc) DeleteAppDataById(ctx context.Context, data dbmodel.IDbModelMongo) error {
 
 	var xError error = nil
 
 	xWhereMap := make(map[string]interface{})
 	xWhereMap["data_id"] = data.GetDataId()
 
-	xError = this.DeleteAppData(ctx,data, xWhereMap)
+	xError = this.DeleteAppData(ctx, data, xWhereMap)
 
 	return xError
 
@@ -608,5 +607,3 @@ func (this *DbMongoSvc) getAppDataIndexs(data interface{}) []string {
 	return xIndexList
 
 }
-
-

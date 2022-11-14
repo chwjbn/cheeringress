@@ -10,7 +10,7 @@ import (
 )
 
 type CheerLog struct {
-	mLogger         *zap.Logger
+	mLogger *zap.Logger
 }
 
 func NewCheerLogOnFile() *CheerLog {
@@ -35,7 +35,7 @@ func NewCheerLogOnFile() *CheerLog {
 		StdError(fmt.Sprintf("NewCheerLog CheerLog.getLogWriter Error=[%s]", xError.Error()))
 	}
 
-	xError = xThis.InitWithLogWriter(xInfoLogWriter,xWarnLogWriter, xErrorLogWriter)
+	xError = xThis.InitWithLogWriter(xInfoLogWriter, xWarnLogWriter, xErrorLogWriter)
 
 	if xError != nil {
 		StdError(fmt.Sprintf("NewCheerLog CheerLog.InitWithLogWriter Error=[%s]", xError.Error()))
@@ -44,7 +44,6 @@ func NewCheerLogOnFile() *CheerLog {
 	return xThis
 
 }
-
 
 func (this *CheerLog) LogInfo(logContent string) {
 
@@ -73,7 +72,7 @@ func (this *CheerLog) LogError(logContent string) {
 	this.mLogger.Error(logContent)
 }
 
-func (this *CheerLog) InitWithLogWriter(logWriterForInfo zapcore.WriteSyncer,logWriterForWarn zapcore.WriteSyncer, logWriterForError zapcore.WriteSyncer) error {
+func (this *CheerLog) InitWithLogWriter(logWriterForInfo zapcore.WriteSyncer, logWriterForWarn zapcore.WriteSyncer, logWriterForError zapcore.WriteSyncer) error {
 
 	var xError error = nil
 
@@ -90,7 +89,6 @@ func (this *CheerLog) InitWithLogWriter(logWriterForInfo zapcore.WriteSyncer,log
 	xLogErrorLevel := zap.LevelEnablerFunc(func(lvl zapcore.Level) bool {
 		return lvl >= zapcore.ErrorLevel
 	})
-
 
 	xLogCore := zapcore.NewTee(
 		zapcore.NewCore(xEncoder, logWriterForInfo, xLogInfoLevel),
@@ -126,7 +124,7 @@ func (this *CheerLog) getLogEncoder() zapcore.Encoder {
 	return xEncoder
 }
 
-func (this *CheerLog) getLogFileWriter(logFileName string) (error,  zapcore.WriteSyncer) {
+func (this *CheerLog) getLogFileWriter(logFileName string) (error, zapcore.WriteSyncer) {
 
 	var xError error = nil
 
@@ -145,7 +143,7 @@ func (this *CheerLog) getLogFileWriter(logFileName string) (error,  zapcore.Writ
 		rotatelogs.WithClock(rotatelogs.Local),       //本地时区
 	)
 
-	if xError!=nil{
+	if xError != nil {
 		return xError, nil
 	}
 
@@ -155,7 +153,7 @@ func (this *CheerLog) getLogFileWriter(logFileName string) (error,  zapcore.Writ
 
 }
 
-func (this *CheerLog) getStdErrorWriter() (error,  zapcore.WriteSyncer) {
+func (this *CheerLog) getStdErrorWriter() (error, zapcore.WriteSyncer) {
 
 	var xError error = nil
 
@@ -164,7 +162,7 @@ func (this *CheerLog) getStdErrorWriter() (error,  zapcore.WriteSyncer) {
 	return xError, xWriteSyncer
 }
 
-func (this *CheerLog) getStdOutWriter() (error,  zapcore.WriteSyncer) {
+func (this *CheerLog) getStdOutWriter() (error, zapcore.WriteSyncer) {
 
 	var xError error = nil
 
@@ -172,4 +170,3 @@ func (this *CheerLog) getStdOutWriter() (error,  zapcore.WriteSyncer) {
 
 	return xError, xWriteSyncer
 }
-

@@ -1,12 +1,12 @@
 package workerservice
 
 import (
+	"errors"
+	"fmt"
 	"github.com/chwjbn/cheeringress/app/protocol"
 	"github.com/chwjbn/cheeringress/app/worker/workermodel"
 	"github.com/chwjbn/cheeringress/cheerlib"
 	"github.com/chwjbn/cheeringress/config"
-	"errors"
-	"fmt"
 	"math/rand"
 	"strings"
 	"sync"

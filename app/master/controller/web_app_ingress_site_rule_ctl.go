@@ -34,7 +34,7 @@ func (this *WebAppCtl) CtlIngressSiteRulePageData(ctx *gin.Context) {
 
 	xData := dbmodel.AppDataIngressSiteRule{}
 
-	xPageData := this.AppContext.AppDbSvc.GetDataPageList(ctx.Request.Context(),&xData, xWhere, xSort, xRequest.PageNo, xRequest.PageSize)
+	xPageData := this.AppContext.AppDbSvc.GetDataPageList(ctx.Request.Context(), &xData, xWhere, xSort, xRequest.PageNo, xRequest.PageSize)
 
 	this.ReturnPageData(ctx, xPageData)
 }
@@ -58,7 +58,7 @@ func (this *WebAppCtl) CtlIngressSiteRuleAdd(ctx *gin.Context) {
 		return
 	}
 
-	xData := this.AppContext.AppDbSvc.GetIngressSiteRuleByTitle(ctx.Request.Context(),xRequest.Title)
+	xData := this.AppContext.AppDbSvc.GetIngressSiteRuleByTitle(ctx.Request.Context(), xRequest.Title)
 
 	if len(xData.DataId) > 0 {
 		this.ReturnAppError(ctx, "输入的规则名称已经存在!")
@@ -88,14 +88,14 @@ func (this *WebAppCtl) CtlIngressSiteRuleAdd(ctx *gin.Context) {
 
 	xData.InitDataIdWithRand(xData.NamespaceId)
 
-	xError, _ = this.AppContext.AppDbSvc.AddAppData(ctx.Request.Context(),&xData)
+	xError, _ = this.AppContext.AppDbSvc.AddAppData(ctx.Request.Context(), &xData)
 
 	if xError != nil {
 		cheerlib.LogError(xError.Error())
 		this.ReturnIntenalError(ctx)
 	}
 
-	this.AppContext.AppDbSvc.UpdateNamespaceLastVer(ctx.Request.Context(),xData.NamespaceId)
+	this.AppContext.AppDbSvc.UpdateNamespaceLastVer(ctx.Request.Context(), xData.NamespaceId)
 
 	this.ReturnAppSuccess(ctx, "app.server.msg.common.op.succ")
 }
@@ -122,7 +122,7 @@ func (this *WebAppCtl) CtlIngressSiteRuleInfo(ctx *gin.Context) {
 	xData := dbmodel.AppDataIngressSiteRule{}
 	xData.SetDataId(xRequest.DataId)
 
-	this.AppContext.AppDbSvc.GetAppDataById(ctx.Request.Context(),&xData)
+	this.AppContext.AppDbSvc.GetAppDataById(ctx.Request.Context(), &xData)
 
 	this.ReturnAppSuccessData(ctx, xData)
 }
@@ -149,14 +149,14 @@ func (this *WebAppCtl) CtlIngressSiteRuleRemove(ctx *gin.Context) {
 	xData := dbmodel.AppDataIngressSiteRule{}
 	xData.SetDataId(xRequest.DataId)
 
-	this.AppContext.AppDbSvc.GetAppDataById(ctx.Request.Context(),&xData)
+	this.AppContext.AppDbSvc.GetAppDataById(ctx.Request.Context(), &xData)
 
 	xWhere := make(map[string]interface{})
 	xWhere["data_id"] = xRequest.DataId
 
-	this.AppContext.AppDbSvc.DeleteAppData(ctx.Request.Context(),&xData, xWhere)
+	this.AppContext.AppDbSvc.DeleteAppData(ctx.Request.Context(), &xData, xWhere)
 
-	this.AppContext.AppDbSvc.UpdateNamespaceLastVer(ctx.Request.Context(),xData.NamespaceId)
+	this.AppContext.AppDbSvc.UpdateNamespaceLastVer(ctx.Request.Context(), xData.NamespaceId)
 
 	this.ReturnAppSuccess(ctx, "app.server.msg.common.op.succ")
 }

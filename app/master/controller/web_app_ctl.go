@@ -1,10 +1,10 @@
 package controller
 
 import (
+	"errors"
 	"github.com/chwjbn/cheeringress/app/master/bizcontext"
 	"github.com/chwjbn/cheeringress/app/master/dbmodel"
 	"github.com/chwjbn/cheeringress/cheerlib"
-	"errors"
 	"github.com/gin-gonic/gin"
 	_ "strings"
 )
@@ -33,7 +33,7 @@ func (this *WebAppCtl) getLoginToken(ctx *gin.Context) dbmodel.AppDataToken {
 
 	xTokenData.SetDataId(xAuthorization)
 
-	xError := this.AppContext.AppDbSvc.GetAppDataById(ctx.Request.Context(),&xTokenData)
+	xError := this.AppContext.AppDbSvc.GetAppDataById(ctx.Request.Context(), &xTokenData)
 	if xError != nil {
 		xTokenData = dbmodel.AppDataToken{}
 		return xTokenData
@@ -42,7 +42,7 @@ func (this *WebAppCtl) getLoginToken(ctx *gin.Context) dbmodel.AppDataToken {
 	xTokenData.LastAliveTime = this.GetClientIp(ctx)
 	xTokenData.LastAliveIp = cheerlib.TimeGetNow()
 
-	this.AppContext.AppDbSvc.UpdateAppDataById(ctx.Request.Context(),&xTokenData)
+	this.AppContext.AppDbSvc.UpdateAppDataById(ctx.Request.Context(), &xTokenData)
 
 	return xTokenData
 

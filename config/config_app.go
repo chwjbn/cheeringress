@@ -5,7 +5,7 @@ import "errors"
 type ConfigApp struct {
 	AppMode string `yaml:"app_mode"`
 
-	SkyapmAppName string `yaml:"skyapm_app_name"`
+	SkyapmAppName     string `yaml:"skyapm_app_name"`
 	SkyapmOapGrpcAddr string `yaml:"skyapm_oap_grpc_addr"`
 }
 

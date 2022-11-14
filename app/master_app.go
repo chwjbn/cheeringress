@@ -1,11 +1,11 @@
 package app
 
 import (
+	"fmt"
 	"github.com/chwjbn/cheeringress/app/master/bizcontext"
 	"github.com/chwjbn/cheeringress/app/master/controller"
 	"github.com/chwjbn/cheeringress/cheerlib"
 	"github.com/chwjbn/cheeringress/config"
-	"fmt"
 	v3 "github.com/chwjbn/go4sky/plugins/gin/v3"
 	"github.com/gin-gonic/gin"
 	"net/http"

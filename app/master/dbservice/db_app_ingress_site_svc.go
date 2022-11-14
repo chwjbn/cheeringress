@@ -1,11 +1,11 @@
 package dbservice
 
 import (
-	"github.com/chwjbn/cheeringress/app/master/dbmodel"
 	"context"
+	"github.com/chwjbn/cheeringress/app/master/dbmodel"
 )
 
-func (this *DbMongoSvc) GetIngressSiteByTitle(ctx context.Context,title string) dbmodel.AppDataIngressSite {
+func (this *DbMongoSvc) GetIngressSiteByTitle(ctx context.Context, title string) dbmodel.AppDataIngressSite {
 
 	xData := dbmodel.AppDataIngressSite{}
 
@@ -14,7 +14,7 @@ func (this *DbMongoSvc) GetIngressSiteByTitle(ctx context.Context,title string) 
 
 	xSort := make(map[string]interface{})
 
-	xError := this.GetAppDataWithWhereAndOrder(ctx,&xData, xWhere, xSort)
+	xError := this.GetAppDataWithWhereAndOrder(ctx, &xData, xWhere, xSort)
 
 	if xError != nil {
 		xData = dbmodel.AppDataIngressSite{}
@@ -24,7 +24,7 @@ func (this *DbMongoSvc) GetIngressSiteByTitle(ctx context.Context,title string) 
 
 }
 
-func (this *DbMongoSvc) GetFirstIngressSiteByActionValue(ctx context.Context,actionValue string) dbmodel.AppDataIngressSite {
+func (this *DbMongoSvc) GetFirstIngressSiteByActionValue(ctx context.Context, actionValue string) dbmodel.AppDataIngressSite {
 
 	xData := dbmodel.AppDataIngressSite{}
 
@@ -33,7 +33,7 @@ func (this *DbMongoSvc) GetFirstIngressSiteByActionValue(ctx context.Context,act
 
 	xSort := make(map[string]interface{})
 
-	xError := this.GetAppDataWithWhereAndOrder(ctx,&xData, xWhere, xSort)
+	xError := this.GetAppDataWithWhereAndOrder(ctx, &xData, xWhere, xSort)
 
 	if xError != nil {
 		xData = dbmodel.AppDataIngressSite{}
@@ -42,7 +42,7 @@ func (this *DbMongoSvc) GetFirstIngressSiteByActionValue(ctx context.Context,act
 	return xData
 }
 
-func (this *DbMongoSvc) GetIngressSiteRuleByTitle(ctx context.Context,title string) dbmodel.AppDataIngressSiteRule {
+func (this *DbMongoSvc) GetIngressSiteRuleByTitle(ctx context.Context, title string) dbmodel.AppDataIngressSiteRule {
 
 	xData := dbmodel.AppDataIngressSiteRule{}
 
@@ -51,7 +51,7 @@ func (this *DbMongoSvc) GetIngressSiteRuleByTitle(ctx context.Context,title stri
 
 	xSort := make(map[string]interface{})
 
-	xError := this.GetAppDataWithWhereAndOrder(ctx,&xData, xWhere, xSort)
+	xError := this.GetAppDataWithWhereAndOrder(ctx, &xData, xWhere, xSort)
 
 	if xError != nil {
 		xData = dbmodel.AppDataIngressSiteRule{}
@@ -61,7 +61,7 @@ func (this *DbMongoSvc) GetIngressSiteRuleByTitle(ctx context.Context,title stri
 
 }
 
-func (this *DbMongoSvc) GetFirstIngressSiteRuleBySiteId(ctx context.Context,siteId string) dbmodel.AppDataIngressSiteRule {
+func (this *DbMongoSvc) GetFirstIngressSiteRuleBySiteId(ctx context.Context, siteId string) dbmodel.AppDataIngressSiteRule {
 
 	xData := dbmodel.AppDataIngressSiteRule{}
 
@@ -70,7 +70,7 @@ func (this *DbMongoSvc) GetFirstIngressSiteRuleBySiteId(ctx context.Context,site
 
 	xSort := make(map[string]interface{})
 
-	xError := this.GetAppDataWithWhereAndOrder(ctx,&xData, xWhere, xSort)
+	xError := this.GetAppDataWithWhereAndOrder(ctx, &xData, xWhere, xSort)
 
 	if xError != nil {
 		xData = dbmodel.AppDataIngressSiteRule{}
@@ -79,7 +79,7 @@ func (this *DbMongoSvc) GetFirstIngressSiteRuleBySiteId(ctx context.Context,site
 	return xData
 }
 
-func (this *DbMongoSvc) GetFirstIngressSiteRuleByActionValue(ctx context.Context,actionValue string) dbmodel.AppDataIngressSiteRule {
+func (this *DbMongoSvc) GetFirstIngressSiteRuleByActionValue(ctx context.Context, actionValue string) dbmodel.AppDataIngressSiteRule {
 
 	xData := dbmodel.AppDataIngressSiteRule{}
 
@@ -88,7 +88,7 @@ func (this *DbMongoSvc) GetFirstIngressSiteRuleByActionValue(ctx context.Context
 
 	xSort := make(map[string]interface{})
 
-	xError := this.GetAppDataWithWhereAndOrder(ctx,&xData, xWhere, xSort)
+	xError := this.GetAppDataWithWhereAndOrder(ctx, &xData, xWhere, xSort)
 
 	if xError != nil {
 		xData = dbmodel.AppDataIngressSiteRule{}

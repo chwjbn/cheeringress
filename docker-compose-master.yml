@@ -1,14 +1,14 @@
 version: '3'
 services:
-    cheer-gateway-admin:
-      image: harbor.aiagain.com/ik-arch/cheer-ingress:prod
-      ports:
-        - 28808:28808
-      volumes:
-        - ./data:/data/app/log
-      environment:
-        - cheerenv_app_mode=master
-        - cheerenv_skyapm_oap_grpc_addr=master
-        - cheerenv_server_addr=0.0.0.0
-        - cheerenv_server_port=28808
-        - cheerenv_db_app_mongodb_uri=mongodb://127.0.0.1:30000/db_cheer_ingress
+  cheer-gateway-admin:
+    image: harbor.aiagain.com/ik-arch/cheer-ingress:prod
+    ports:
+      - 28808:28808
+    volumes:
+      - ./data:/data/app/log
+    environment:
+      - cheerenv_app_mode=master
+      - cheerenv_skyapm_oap_grpc_addr=master
+      - cheerenv_server_addr=0.0.0.0
+      - cheerenv_server_port=28808
+      - cheerenv_db_app_mongodb_uri=mongodb://127.0.0.1:30000/db_cheer_ingress

@@ -1,10 +1,10 @@
 package controller
 
 import (
+	"fmt"
 	"github.com/chwjbn/cheeringress/app/master/bizmodel"
 	"github.com/chwjbn/cheeringress/app/master/dbmodel"
 	"github.com/chwjbn/cheeringress/cheerlib"
-	"fmt"
 	"github.com/gin-gonic/gin"
 	"go.mongodb.org/mongo-driver/bson"
 )
@@ -33,7 +33,7 @@ func (this *WebAppCtl) CtlIngressActionStaticMapData(ctx *gin.Context) {
 
 	xMapData := []bizmodel.DataMapNode{}
 
-	xError, xDataList := this.AppContext.AppDbSvc.GetAppDataListWithWhereAndOrder(ctx.Request.Context(),&xData, xWhere, xSort, -1, -1)
+	xError, xDataList := this.AppContext.AppDbSvc.GetAppDataListWithWhereAndOrder(ctx.Request.Context(), &xData, xWhere, xSort, -1, -1)
 
 	if xError == nil {
 
@@ -80,7 +80,7 @@ func (this *WebAppCtl) CtlIngressActionStaticPageData(ctx *gin.Context) {
 
 	xData := dbmodel.AppDataIngressActionStatic{}
 
-	xPageData := this.AppContext.AppDbSvc.GetDataPageList(ctx.Request.Context(),&xData, xWhere, xSort, xRequest.PageNo, xRequest.PageSize)
+	xPageData := this.AppContext.AppDbSvc.GetDataPageList(ctx.Request.Context(), &xData, xWhere, xSort, xRequest.PageNo, xRequest.PageSize)
 
 	this.ReturnPageData(ctx, xPageData)
 }
@@ -104,7 +104,7 @@ func (this *WebAppCtl) CtlIngressActionStaticAdd(ctx *gin.Context) {
 		return
 	}
 
-	xData := this.AppContext.AppDbSvc.GetIngressActionStaticByTitle(ctx.Request.Context(),xRequest.Title)
+	xData := this.AppContext.AppDbSvc.GetIngressActionStaticByTitle(ctx.Request.Context(), xRequest.Title)
 
 	if len(xData.DataId) > 0 {
 		this.ReturnAppError(ctx, "输入的资源名称已经存在!")
@@ -127,14 +127,14 @@ func (this *WebAppCtl) CtlIngressActionStaticAdd(ctx *gin.Context) {
 
 	xData.InitDataIdWithRand(xData.NamespaceId)
 
-	xError, _ = this.AppContext.AppDbSvc.AddAppData(ctx.Request.Context(),&xData)
+	xError, _ = this.AppContext.AppDbSvc.AddAppData(ctx.Request.Context(), &xData)
 
 	if xError != nil {
 		cheerlib.LogError(xError.Error())
 		this.ReturnIntenalError(ctx)
 	}
 
-	this.AppContext.AppDbSvc.UpdateNamespaceLastVer(ctx.Request.Context(),xData.NamespaceId)
+	this.AppContext.AppDbSvc.UpdateNamespaceLastVer(ctx.Request.Context(), xData.NamespaceId)
 
 	this.ReturnAppSuccess(ctx, "app.server.msg.common.op.succ")
 }
@@ -161,7 +161,7 @@ func (this *WebAppCtl) CtlIngressActionStaticInfo(ctx *gin.Context) {
 	xData := dbmodel.AppDataIngressActionStatic{}
 	xData.SetDataId(xRequest.DataId)
 
-	this.AppContext.AppDbSvc.GetAppDataById(ctx.Request.Context(),&xData)
+	this.AppContext.AppDbSvc.GetAppDataById(ctx.Request.Context(), &xData)
 
 	this.ReturnAppSuccessData(ctx, xData)
 }
@@ -188,7 +188,7 @@ func (this *WebAppCtl) CtlIngressActionStaticSave(ctx *gin.Context) {
 	xData := dbmodel.AppDataIngressActionStatic{}
 	xData.SetDataId(xRequest.DataId)
 
-	this.AppContext.AppDbSvc.GetAppDataById(ctx.Request.Context(),&xData)
+	this.AppContext.AppDbSvc.GetAppDataById(ctx.Request.Context(), &xData)
 
 	if len(xData.State) < 1 {
 		this.ReturnAppError(ctx, "操作失败,提交的数据不存在!")
@@ -205,14 +205,14 @@ func (this *WebAppCtl) CtlIngressActionStaticSave(ctx *gin.Context) {
 	xData.SetUpdateTime(cheerlib.TimeGetNow())
 	xData.SetUpdateIp(xClientIp)
 
-	xError = this.AppContext.AppDbSvc.UpdateAppDataById(ctx.Request.Context(),&xData)
+	xError = this.AppContext.AppDbSvc.UpdateAppDataById(ctx.Request.Context(), &xData)
 
 	if xError != nil {
 		cheerlib.LogError(xError.Error())
 		this.ReturnIntenalError(ctx)
 	}
 
-	this.AppContext.AppDbSvc.UpdateNamespaceLastVer(ctx.Request.Context(),xData.NamespaceId)
+	this.AppContext.AppDbSvc.UpdateNamespaceLastVer(ctx.Request.Context(), xData.NamespaceId)
 
 	this.ReturnAppSuccess(ctx, "app.server.msg.common.op.succ")
 }
@@ -236,13 +236,13 @@ func (this *WebAppCtl) CtlIngressActionStaticRemove(ctx *gin.Context) {
 		return
 	}
 
-	xSiteInfo := this.AppContext.AppDbSvc.GetFirstIngressSiteByActionValue(ctx.Request.Context(),xRequest.DataId)
+	xSiteInfo := this.AppContext.AppDbSvc.GetFirstIngressSiteByActionValue(ctx.Request.Context(), xRequest.DataId)
 	if len(xSiteInfo.DataId) > 0 {
 		this.ReturnAppError(ctx, fmt.Sprintf("操作失败,此静态资源被站点[%s]引用!", xSiteInfo.Title))
 		return
 	}
 
-	xSiteRuleInfo := this.AppContext.AppDbSvc.GetFirstIngressSiteRuleByActionValue(ctx.Request.Context(),xRequest.DataId)
+	xSiteRuleInfo := this.AppContext.AppDbSvc.GetFirstIngressSiteRuleByActionValue(ctx.Request.Context(), xRequest.DataId)
 	if len(xSiteRuleInfo.DataId) > 0 {
 		this.ReturnAppError(ctx, fmt.Sprintf("操作失败,此静态资源被站点路由规则[%s]引用!", xSiteRuleInfo.Title))
 		return
@@ -251,14 +251,14 @@ func (this *WebAppCtl) CtlIngressActionStaticRemove(ctx *gin.Context) {
 	xData := dbmodel.AppDataIngressActionStatic{}
 	xData.SetDataId(xRequest.DataId)
 
-	this.AppContext.AppDbSvc.GetAppDataById(ctx.Request.Context(),&xData)
+	this.AppContext.AppDbSvc.GetAppDataById(ctx.Request.Context(), &xData)
 
 	xWhere := make(map[string]interface{})
 	xWhere["data_id"] = xRequest.DataId
 
-	this.AppContext.AppDbSvc.DeleteAppData(ctx.Request.Context(),&xData, xWhere)
+	this.AppContext.AppDbSvc.DeleteAppData(ctx.Request.Context(), &xData, xWhere)
 
-	this.AppContext.AppDbSvc.UpdateNamespaceLastVer(ctx.Request.Context(),xData.NamespaceId)
+	this.AppContext.AppDbSvc.UpdateNamespaceLastVer(ctx.Request.Context(), xData.NamespaceId)
 
 	this.ReturnAppSuccess(ctx, "app.server.msg.common.op.succ")
 }

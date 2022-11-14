@@ -1,8 +1,8 @@
 package cheerapp
 
 import (
-	"github.com/chwjbn/cheeringress/cheerlib"
 	"fmt"
+	"github.com/chwjbn/cheeringress/cheerlib"
 	"github.com/kardianos/service"
 	"os"
 	"os/signal"

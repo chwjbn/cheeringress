@@ -1,9 +1,9 @@
 package workermodel
 
 import (
-	"github.com/chwjbn/cheeringress/cheerlib"
 	"errors"
 	"fmt"
+	"github.com/chwjbn/cheeringress/cheerlib"
 	"github.com/syndtr/goleveldb/leveldb"
 	"github.com/syndtr/goleveldb/leveldb/opt"
 	"path"

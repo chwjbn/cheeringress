@@ -1,15 +1,15 @@
 package dbservice
 
 import (
-	"github.com/chwjbn/cheeringress/app/master/dbmodel"
-	"github.com/chwjbn/cheeringress/app/protocol"
-	"github.com/chwjbn/cheeringress/cheerlib"
 	"context"
 	"errors"
 	"fmt"
+	"github.com/chwjbn/cheeringress/app/master/dbmodel"
+	"github.com/chwjbn/cheeringress/app/protocol"
+	"github.com/chwjbn/cheeringress/cheerlib"
 )
 
-func (this *DbMongoSvc) GetIngressNamespaceByTitle(ctx context.Context,title string) dbmodel.AppDataIngressNamespace {
+func (this *DbMongoSvc) GetIngressNamespaceByTitle(ctx context.Context, title string) dbmodel.AppDataIngressNamespace {
 
 	xData := dbmodel.AppDataIngressNamespace{}
 
@@ -18,7 +18,7 @@ func (this *DbMongoSvc) GetIngressNamespaceByTitle(ctx context.Context,title str
 
 	xSort := make(map[string]interface{})
 
-	xError := this.GetAppDataWithWhereAndOrder(ctx,&xData, xWhere, xSort)
+	xError := this.GetAppDataWithWhereAndOrder(ctx, &xData, xWhere, xSort)
 
 	if xError != nil {
 		xData = dbmodel.AppDataIngressNamespace{}
@@ -28,21 +28,21 @@ func (this *DbMongoSvc) GetIngressNamespaceByTitle(ctx context.Context,title str
 
 }
 
-func (this *DbMongoSvc) GetFirstIngressModelByNamespaceId(ctx context.Context,namespaceId string, data dbmodel.IDbModelMongo) {
+func (this *DbMongoSvc) GetFirstIngressModelByNamespaceId(ctx context.Context, namespaceId string, data dbmodel.IDbModelMongo) {
 
 	xWhere := make(map[string]interface{})
 	xWhere["namespace_id"] = namespaceId
 
 	xSort := make(map[string]interface{})
 
-	this.GetAppDataWithWhereAndOrder(ctx,data, xWhere, xSort)
+	this.GetAppDataWithWhereAndOrder(ctx, data, xWhere, xSort)
 }
 
-func (this *DbMongoSvc) UpdateNamespaceLastVer(ctx context.Context,namespaceId string) {
+func (this *DbMongoSvc) UpdateNamespaceLastVer(ctx context.Context, namespaceId string) {
 
 	xData := dbmodel.AppDataIngressNamespace{}
 	xData.SetDataId(namespaceId)
-	this.GetAppDataById(ctx,&xData)
+	this.GetAppDataById(ctx, &xData)
 	if len(xData.State) < 1 {
 		return
 	}
@@ -54,23 +54,23 @@ func (this *DbMongoSvc) UpdateNamespaceLastVer(ctx context.Context,namespaceId s
 		xData.LastPubVer = "0001-01-01 00:00:00"
 	}
 
-	this.UpdateAppDataById(ctx,&xData)
+	this.UpdateAppDataById(ctx, &xData)
 }
 
-func (this *DbMongoSvc) PublishNamespaceConfig(ctx context.Context,namespaceId string) error {
+func (this *DbMongoSvc) PublishNamespaceConfig(ctx context.Context, namespaceId string) error {
 
 	var xError error
 
 	xNamespaceInfo := dbmodel.AppDataIngressNamespace{}
 	xNamespaceInfo.SetDataId(namespaceId)
-	this.GetAppDataById(ctx,&xNamespaceInfo)
+	this.GetAppDataById(ctx, &xNamespaceInfo)
 
 	if len(xNamespaceInfo.State) < 1 {
 		xError = errors.New("当前发布的网关空间数据不存在!")
 		return xError
 	}
 
-	xIngressConfig := this.GetIngressConfigByNamespaceAndVersion(ctx,xNamespaceInfo.DataId, xNamespaceInfo.LastVer)
+	xIngressConfig := this.GetIngressConfigByNamespaceAndVersion(ctx, xNamespaceInfo.DataId, xNamespaceInfo.LastVer)
 
 	//已经发布了
 	if len(xIngressConfig.State) > 0 {
@@ -89,15 +89,15 @@ func (this *DbMongoSvc) PublishNamespaceConfig(ctx context.Context,namespaceId s
 
 	//反向代理
 	xModelActionBackend := dbmodel.AppDataIngressActionBackend{}
-	_, xDataListActionBackend := this.GetAppDataListWithWhereAndOrder(ctx,&xModelActionBackend, xWhere, xSort, -1, -1)
+	_, xDataListActionBackend := this.GetAppDataListWithWhereAndOrder(ctx, &xModelActionBackend, xWhere, xSort, -1, -1)
 
 	//反向代理节点
 	xModelActionBackendNode := dbmodel.AppDataIngressActionBackendNode{}
-	_, xDataListActionBackendNode := this.GetAppDataListWithWhereAndOrder(ctx,&xModelActionBackendNode, xWhere, xSort, -1, -1)
+	_, xDataListActionBackendNode := this.GetAppDataListWithWhereAndOrder(ctx, &xModelActionBackendNode, xWhere, xSort, -1, -1)
 
 	//静态资源
 	xModelActionStatic := dbmodel.AppDataIngressActionStatic{}
-	_, xDataListActionStatic := this.GetAppDataListWithWhereAndOrder(ctx,&xModelActionStatic, xWhere, xSort, -1, -1)
+	_, xDataListActionStatic := this.GetAppDataListWithWhereAndOrder(ctx, &xModelActionStatic, xWhere, xSort, -1, -1)
 
 	//静态资源跟后端节点不允许同时为空
 	if len(xDataListActionBackend) < 1 && len(xDataListActionStatic) < 1 {
@@ -118,11 +118,11 @@ func (this *DbMongoSvc) PublishNamespaceConfig(ctx context.Context,namespaceId s
 
 	//站点
 	xModelSite := dbmodel.AppDataIngressSite{}
-	_, xDataListSite := this.GetAppDataListWithWhereAndOrder(ctx,&xModelSite, xWhere, xSortOrderNo, -1, -1)
+	_, xDataListSite := this.GetAppDataListWithWhereAndOrder(ctx, &xModelSite, xWhere, xSortOrderNo, -1, -1)
 
 	//站点规则
 	xModelSiteRule := dbmodel.AppDataIngressSiteRule{}
-	_, xDataListSiteRule := this.GetAppDataListWithWhereAndOrder(ctx,&xModelSiteRule, xWhere, xSortOrderNo, -1, -1)
+	_, xDataListSiteRule := this.GetAppDataListWithWhereAndOrder(ctx, &xModelSiteRule, xWhere, xSortOrderNo, -1, -1)
 
 	//准备发布数据
 	xPubData := protocol.WorkerDataNamespaceDataContent{}
@@ -225,7 +225,7 @@ func (this *DbMongoSvc) PublishNamespaceConfig(ctx context.Context,namespaceId s
 
 	xIngressConfig.InitDataIdWithRand(xNamespaceInfo.DataId)
 
-	xDbErr, _ := this.AddAppData(ctx,&xIngressConfig)
+	xDbErr, _ := this.AddAppData(ctx, &xIngressConfig)
 
 	if xDbErr != nil {
 		xError = errors.New(fmt.Sprintf("发布失败,服务器错误=[%s]", xDbErr.Error()))
@@ -233,7 +233,7 @@ func (this *DbMongoSvc) PublishNamespaceConfig(ctx context.Context,namespaceId s
 	}
 
 	xNamespaceInfo.LastPubVer = xNamespaceInfo.LastVer
-	this.UpdateAppDataById(ctx,&xNamespaceInfo)
+	this.UpdateAppDataById(ctx, &xNamespaceInfo)
 
 	return xError
 

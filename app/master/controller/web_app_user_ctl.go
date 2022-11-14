@@ -19,7 +19,7 @@ func (this *WebAppCtl) CtlUserGetCurrent(ctx *gin.Context) {
 	xUserData := dbmodel.AppDataUser{}
 	xUserData.SetDataId(xTokenData.AccountId)
 
-	xError := this.AppContext.AppDbSvc.GetAppDataById(ctx.Request.Context(),&xUserData)
+	xError := this.AppContext.AppDbSvc.GetAppDataById(ctx.Request.Context(), &xUserData)
 
 	if xError != nil {
 		this.ReturnMsg(ctx, "401", "app.server.msg.common.token.invalid", nil)
@@ -54,7 +54,7 @@ func (this *WebAppCtl) CtlUserUpdateInfo(ctx *gin.Context) {
 	xUserInfo := dbmodel.AppDataUser{}
 	xUserInfo.SetDataId(xRequest.DataId)
 
-	this.AppContext.AppDbSvc.GetAppDataById(ctx.Request.Context(),&xUserInfo)
+	this.AppContext.AppDbSvc.GetAppDataById(ctx.Request.Context(), &xUserInfo)
 
 	if len(xUserInfo.GetState()) < 1 {
 		this.ReturnAppError(ctx, "当前用户信息不存在!")
@@ -67,7 +67,7 @@ func (this *WebAppCtl) CtlUserUpdateInfo(ctx *gin.Context) {
 	xUserInfo.UpdateTime = cheerlib.TimeGetNow()
 	xUserInfo.UpdateIp = this.GetClientIp(ctx)
 
-	this.AppContext.AppDbSvc.UpdateAppDataById(ctx.Request.Context(),&xUserInfo)
+	this.AppContext.AppDbSvc.UpdateAppDataById(ctx.Request.Context(), &xUserInfo)
 
 	this.ReturnAppSuccess(ctx, "app.server.msg.common.op.succ")
 }
@@ -96,7 +96,7 @@ func (this *WebAppCtl) CtlUserUpdateSecurity(ctx *gin.Context) {
 	xUserInfo := dbmodel.AppDataUser{}
 	xUserInfo.SetDataId(xRequest.DataId)
 
-	this.AppContext.AppDbSvc.GetAppDataById(ctx.Request.Context(),&xUserInfo)
+	this.AppContext.AppDbSvc.GetAppDataById(ctx.Request.Context(), &xUserInfo)
 
 	if len(xUserInfo.GetState()) < 1 {
 		this.ReturnAppError(ctx, "当前用户信息不存在!")
@@ -114,7 +114,7 @@ func (this *WebAppCtl) CtlUserUpdateSecurity(ctx *gin.Context) {
 	xUserInfo.UpdateTime = cheerlib.TimeGetNow()
 	xUserInfo.UpdateIp = this.GetClientIp(ctx)
 
-	this.AppContext.AppDbSvc.UpdateAppDataById(ctx.Request.Context(),&xUserInfo)
+	this.AppContext.AppDbSvc.UpdateAppDataById(ctx.Request.Context(), &xUserInfo)
 
 	this.ReturnAppSuccess(ctx, "app.server.msg.common.op.succ")
 

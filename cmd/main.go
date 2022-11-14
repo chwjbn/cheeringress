@@ -131,8 +131,8 @@ func AppWork() error {
 	}
 
 	//启用了SkyApm
-	os.Setenv("SKYAPM_APP_NAME", fmt.Sprintf("arch::cheeringress_%s",cfg.AppMode))
-	if len(cfg.SkyapmAppName)>0{
+	os.Setenv("SKYAPM_APP_NAME", fmt.Sprintf("arch::cheeringress_%s", cfg.AppMode))
+	if len(cfg.SkyapmAppName) > 0 {
 		os.Setenv("SKYAPM_APP_NAME", cfg.SkyapmAppName)
 	}
 

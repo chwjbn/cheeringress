@@ -49,12 +49,12 @@ func (this *WebAppCtl) CtlAccountLogin(ctx *gin.Context) {
 		return
 	}
 
-	xAccountData := this.AppContext.AppDbSvc.GetAccountByUserName(ctx.Request.Context(),xRequest.Username)
+	xAccountData := this.AppContext.AppDbSvc.GetAccountByUserName(ctx.Request.Context(), xRequest.Username)
 
 	if len(xAccountData.DataId) < 1 {
 		if this.AppContext.AppDbSvc.GetAccountCount(ctx) < 1 {
-			this.AppContext.AppDbSvc.CreateAccount(ctx.Request.Context(),xRequest.Username, xRequest.Password, this.GetClientIp(ctx))
-			xAccountData = this.AppContext.AppDbSvc.GetAccountByUserName(ctx.Request.Context(),xRequest.Username)
+			this.AppContext.AppDbSvc.CreateAccount(ctx.Request.Context(), xRequest.Username, xRequest.Password, this.GetClientIp(ctx))
+			xAccountData = this.AppContext.AppDbSvc.GetAccountByUserName(ctx.Request.Context(), xRequest.Username)
 		}
 	}
 
@@ -80,7 +80,7 @@ func (this *WebAppCtl) CtlAccountLogin(ctx *gin.Context) {
 	xAppDataToken.SetUpdateIp(this.GetClientIp(ctx))
 	xAppDataToken.SetState("enable")
 
-	xBizError, xTokenId := xAccountSvc.CreateAccountToken(ctx.Request.Context(),xAppDataToken)
+	xBizError, xTokenId := xAccountSvc.CreateAccountToken(ctx.Request.Context(), xAppDataToken)
 	if xBizError != nil {
 		cheerlib.LogError(xBizError.Error())
 		this.ReturnIntenalError(ctx)
@@ -101,7 +101,7 @@ func (this *WebAppCtl) CtlAccountLogout(ctx *gin.Context) {
 	}
 
 	xAccountSvc := bizservice.AppAccountService{Context: this.AppContext}
-	xAccountSvc.RemoveAccountTokenById(ctx.Request.Context(),xTokenData.DataId)
+	xAccountSvc.RemoveAccountTokenById(ctx.Request.Context(), xTokenData.DataId)
 
 	this.ReturnAppSuccess(ctx, "app.server.msg.common.action.succ")
 

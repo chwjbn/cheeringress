@@ -1,11 +1,11 @@
 package dbservice
 
 import (
-	"github.com/chwjbn/cheeringress/app/master/dbmodel"
 	"context"
+	"github.com/chwjbn/cheeringress/app/master/dbmodel"
 )
 
-func (this *DbMongoSvc) GetIngressConfigByNamespaceAndVersion(ctx context.Context,namespaceId string, version string) dbmodel.AppDataIngressConfig {
+func (this *DbMongoSvc) GetIngressConfigByNamespaceAndVersion(ctx context.Context, namespaceId string, version string) dbmodel.AppDataIngressConfig {
 
 	xData := dbmodel.AppDataIngressConfig{}
 
@@ -15,7 +15,7 @@ func (this *DbMongoSvc) GetIngressConfigByNamespaceAndVersion(ctx context.Contex
 
 	xSort := make(map[string]interface{})
 
-	xError := this.GetAppDataWithWhereAndOrder(ctx,&xData, xWhere, xSort)
+	xError := this.GetAppDataWithWhereAndOrder(ctx, &xData, xWhere, xSort)
 
 	if xError != nil {
 		xData = dbmodel.AppDataIngressConfig{}
@@ -25,13 +25,13 @@ func (this *DbMongoSvc) GetIngressConfigByNamespaceAndVersion(ctx context.Contex
 
 }
 
-func (this *DbMongoSvc) RemoveIngressConfigByNamespaceId(ctx context.Context,namespaceId string) {
+func (this *DbMongoSvc) RemoveIngressConfigByNamespaceId(ctx context.Context, namespaceId string) {
 
 	xData := dbmodel.AppDataIngressConfig{}
 
 	xWhere := make(map[string]interface{})
 	xWhere["namespace_id"] = namespaceId
 
-	this.DeleteAppData(ctx,&xData, xWhere)
+	this.DeleteAppData(ctx, &xData, xWhere)
 
 }

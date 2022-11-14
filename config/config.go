@@ -1,8 +1,8 @@
 package config
 
 import (
-	"github.com/chwjbn/cheeringress/cheerlib"
 	"fmt"
+	"github.com/chwjbn/cheeringress/cheerlib"
 	"gopkg.in/yaml.v2"
 	"io/ioutil"
 	"os"

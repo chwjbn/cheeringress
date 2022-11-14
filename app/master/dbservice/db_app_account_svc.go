@@ -1,14 +1,14 @@
 package dbservice
 
 import (
-	"github.com/chwjbn/cheeringress/app/master/dbmodel"
-	"github.com/chwjbn/cheeringress/cheerlib"
 	"context"
 	"errors"
 	"fmt"
+	"github.com/chwjbn/cheeringress/app/master/dbmodel"
+	"github.com/chwjbn/cheeringress/cheerlib"
 )
 
-func (this *DbMongoSvc) GetAccountByUserName(ctx context.Context,username string) dbmodel.AppDataUser {
+func (this *DbMongoSvc) GetAccountByUserName(ctx context.Context, username string) dbmodel.AppDataUser {
 
 	xData := dbmodel.AppDataUser{}
 
@@ -17,7 +17,7 @@ func (this *DbMongoSvc) GetAccountByUserName(ctx context.Context,username string
 
 	xSort := make(map[string]interface{})
 
-	xError := this.GetAppDataWithWhereAndOrder(ctx,&xData, xWhere, xSort)
+	xError := this.GetAppDataWithWhereAndOrder(ctx, &xData, xWhere, xSort)
 
 	if xError != nil {
 		xData = dbmodel.AppDataUser{}
@@ -34,17 +34,17 @@ func (this *DbMongoSvc) GetAccountCount(ctx context.Context) int64 {
 	xData := dbmodel.AppDataUser{}
 	xWhere := make(map[string]interface{})
 
-	nRet = this.GetAppDataCount(ctx,&xData, xWhere)
+	nRet = this.GetAppDataCount(ctx, &xData, xWhere)
 
 	return nRet
 
 }
 
-func (this *DbMongoSvc) CreateAccount(ctx context.Context,username string, password string, clientIp string) error {
+func (this *DbMongoSvc) CreateAccount(ctx context.Context, username string, password string, clientIp string) error {
 
 	var xError error = nil
 
-	xAccountData := this.GetAccountByUserName(ctx,username)
+	xAccountData := this.GetAccountByUserName(ctx, username)
 	if len(xAccountData.Username) > 0 {
 		xError = errors.New("app.server.msg.account.username.exists")
 		return xError
@@ -68,7 +68,7 @@ func (this *DbMongoSvc) CreateAccount(ctx context.Context,username string, passw
 
 	xAccountData.InitDataId()
 
-	xDbError, _ := this.AddAppData(ctx,&xAccountData)
+	xDbError, _ := this.AddAppData(ctx, &xAccountData)
 
 	if xDbError != nil {
 		xError = errors.New(fmt.Sprintf("Internal Error=[%s]", xDbError.Error()))

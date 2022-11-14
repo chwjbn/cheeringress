@@ -1,11 +1,11 @@
 package dbservice
 
 import (
-	"github.com/chwjbn/cheeringress/app/master/dbmodel"
 	"context"
+	"github.com/chwjbn/cheeringress/app/master/dbmodel"
 )
 
-func (this *DbMongoSvc) GetIngressActionBackendByTitle(ctx context.Context,title string) dbmodel.AppDataIngressActionBackend {
+func (this *DbMongoSvc) GetIngressActionBackendByTitle(ctx context.Context, title string) dbmodel.AppDataIngressActionBackend {
 
 	xData := dbmodel.AppDataIngressActionBackend{}
 
@@ -14,7 +14,7 @@ func (this *DbMongoSvc) GetIngressActionBackendByTitle(ctx context.Context,title
 
 	xSort := make(map[string]interface{})
 
-	xError := this.GetAppDataWithWhereAndOrder(ctx,&xData, xWhere, xSort)
+	xError := this.GetAppDataWithWhereAndOrder(ctx, &xData, xWhere, xSort)
 
 	if xError != nil {
 		xData = dbmodel.AppDataIngressActionBackend{}
@@ -24,7 +24,7 @@ func (this *DbMongoSvc) GetIngressActionBackendByTitle(ctx context.Context,title
 
 }
 
-func (this *DbMongoSvc) GetIngressActionBackendNodeByTitle(ctx context.Context,title string) dbmodel.AppDataIngressActionBackendNode {
+func (this *DbMongoSvc) GetIngressActionBackendNodeByTitle(ctx context.Context, title string) dbmodel.AppDataIngressActionBackendNode {
 
 	xData := dbmodel.AppDataIngressActionBackendNode{}
 
@@ -33,7 +33,7 @@ func (this *DbMongoSvc) GetIngressActionBackendNodeByTitle(ctx context.Context,t
 
 	xSort := make(map[string]interface{})
 
-	xError := this.GetAppDataWithWhereAndOrder(ctx,&xData, xWhere, xSort)
+	xError := this.GetAppDataWithWhereAndOrder(ctx, &xData, xWhere, xSort)
 
 	if xError != nil {
 		xData = dbmodel.AppDataIngressActionBackendNode{}
@@ -43,7 +43,7 @@ func (this *DbMongoSvc) GetIngressActionBackendNodeByTitle(ctx context.Context,t
 
 }
 
-func (this *DbMongoSvc) GetFirstIngressActionBackendNodeByBackendId(ctx context.Context,backendId string) dbmodel.AppDataIngressActionBackendNode {
+func (this *DbMongoSvc) GetFirstIngressActionBackendNodeByBackendId(ctx context.Context, backendId string) dbmodel.AppDataIngressActionBackendNode {
 
 	xData := dbmodel.AppDataIngressActionBackendNode{}
 
@@ -52,7 +52,7 @@ func (this *DbMongoSvc) GetFirstIngressActionBackendNodeByBackendId(ctx context.
 
 	xSort := make(map[string]interface{})
 
-	xError := this.GetAppDataWithWhereAndOrder(ctx,&xData, xWhere, xSort)
+	xError := this.GetAppDataWithWhereAndOrder(ctx, &xData, xWhere, xSort)
 
 	if xError != nil {
 		xData = dbmodel.AppDataIngressActionBackendNode{}
@@ -61,19 +61,19 @@ func (this *DbMongoSvc) GetFirstIngressActionBackendNodeByBackendId(ctx context.
 	return xData
 }
 
-func (this *DbMongoSvc) UpdateIngressActionBackendNodeCount(ctx context.Context,backendId string) {
+func (this *DbMongoSvc) UpdateIngressActionBackendNodeCount(ctx context.Context, backendId string) {
 
 	xNodeWhere := make(map[string]interface{})
 	xNodeWhere["backend_id"] = backendId
 
 	xNodeData := dbmodel.AppDataIngressActionBackendNode{}
 
-	xNodeCount := this.GetAppDataCount(ctx,&xNodeData, xNodeWhere)
+	xNodeCount := this.GetAppDataCount(ctx, &xNodeData, xNodeWhere)
 
 	xData := dbmodel.AppDataIngressActionBackend{}
 	xData.SetDataId(backendId)
 
-	this.GetAppDataById(ctx,&xData)
+	this.GetAppDataById(ctx, &xData)
 
 	if len(xData.NamespaceId) < 1 {
 		return
@@ -81,6 +81,6 @@ func (this *DbMongoSvc) UpdateIngressActionBackendNodeCount(ctx context.Context,
 
 	xData.NodeCount = int(xNodeCount)
 
-	this.UpdateAppDataById(ctx,&xData)
+	this.UpdateAppDataById(ctx, &xData)
 
 }

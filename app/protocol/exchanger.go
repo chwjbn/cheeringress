@@ -1,9 +1,9 @@
 package protocol
 
 import (
-	"github.com/chwjbn/cheeringress/cheerlib"
 	"errors"
 	"fmt"
+	"github.com/chwjbn/cheeringress/cheerlib"
 	"github.com/shirou/gopsutil/cpu"
 	"github.com/shirou/gopsutil/mem"
 	"runtime"

@@ -1,10 +1,10 @@
 package controller
 
 import (
+	"fmt"
 	"github.com/chwjbn/cheeringress/app/master/dbmodel"
 	"github.com/chwjbn/cheeringress/app/protocol"
 	"github.com/chwjbn/cheeringress/cheerlib"
-	"fmt"
 	"github.com/gin-gonic/gin"
 	"net/http"
 )
@@ -27,7 +27,7 @@ func (this *WebAppCtl) CtlWorkerApiGetToken(ctx *gin.Context) {
 
 	xNamespaceInfo := dbmodel.AppDataIngressNamespace{}
 	xNamespaceInfo.SetDataId(xAuthorization)
-	this.AppContext.AppDbSvc.GetAppDataById(ctx.Request.Context(),&xNamespaceInfo)
+	this.AppContext.AppDbSvc.GetAppDataById(ctx.Request.Context(), &xNamespaceInfo)
 
 	if len(xNamespaceInfo.State) < 1 {
 		this.ReturnWrokerApiMsg(ctx, protocol.WorkerBaseResponse{Code: "251", Message: "namespace not found."})
@@ -64,7 +64,7 @@ func (this *WebAppCtl) CtlWorkerApiGetToken(ctx *gin.Context) {
 
 	xData.NodeToken = cheerlib.EncryptMd5(fmt.Sprintf("%s_%s", xData.GetDataId(), cheerlib.EncryptNewId()))
 
-	xError, _ = this.AppContext.AppDbSvc.AddAppData(ctx.Request.Context(),&xData)
+	xError, _ = this.AppContext.AppDbSvc.AddAppData(ctx.Request.Context(), &xData)
 	if xError != nil {
 		this.ReturnWrokerApiMsg(ctx, protocol.WorkerBaseResponse{Code: "501", Message: fmt.Sprintf("create token with system error=[%s]", xError.Error())})
 		return
@@ -93,7 +93,7 @@ func (this *WebAppCtl) CtlWorkerApiQueryConfig(ctx *gin.Context) {
 		return
 	}
 
-	xIngressWorkerData := this.AppContext.AppDbSvc.GetIngressWorkerByToken(ctx.Request.Context(),xAuthorization)
+	xIngressWorkerData := this.AppContext.AppDbSvc.GetIngressWorkerByToken(ctx.Request.Context(), xAuthorization)
 	if len(xIngressWorkerData.DataId) < 1 {
 		this.ReturnWrokerApiMsg(ctx, protocol.WorkerBaseResponse{Code: "401", Message: "invalid token."})
 		return
@@ -109,12 +109,12 @@ func (this *WebAppCtl) CtlWorkerApiQueryConfig(ctx *gin.Context) {
 	xIngressWorkerData.NodeLastTime = cheerlib.TimeGetNow()
 	xIngressWorkerData.NodeAddr = xClientIp
 
-	this.AppContext.AppDbSvc.UpdateAppDataById(ctx.Request.Context(),&xIngressWorkerData)
+	this.AppContext.AppDbSvc.UpdateAppDataById(ctx.Request.Context(), &xIngressWorkerData)
 
 	xNamespaceInfo := dbmodel.AppDataIngressNamespace{}
 	xNamespaceInfo.SetDataId(xIngressWorkerData.NamespaceId)
 
-	xError = this.AppContext.AppDbSvc.GetAppDataById(ctx.Request.Context(),&xNamespaceInfo)
+	xError = this.AppContext.AppDbSvc.GetAppDataById(ctx.Request.Context(), &xNamespaceInfo)
 	if xError != nil {
 		this.ReturnWrokerApiMsg(ctx, protocol.WorkerBaseResponse{Code: "258", Message: "invalid namespace data."})
 		return
@@ -144,7 +144,7 @@ func (this *WebAppCtl) CtlWorkerApiFetchConfig(ctx *gin.Context) {
 		return
 	}
 
-	xIngressWorkerData := this.AppContext.AppDbSvc.GetIngressWorkerByToken(ctx.Request.Context(),xAuthorization)
+	xIngressWorkerData := this.AppContext.AppDbSvc.GetIngressWorkerByToken(ctx.Request.Context(), xAuthorization)
 	if len(xIngressWorkerData.DataId) < 1 {
 		this.ReturnWrokerApiMsg(ctx, protocol.WorkerBaseResponse{Code: "401", Message: "invalid token."})
 		return
@@ -154,9 +154,9 @@ func (this *WebAppCtl) CtlWorkerApiFetchConfig(ctx *gin.Context) {
 	xIngressWorkerData.NodeLastTime = cheerlib.TimeGetNow()
 	xIngressWorkerData.NodeAddr = xClientIp
 
-	this.AppContext.AppDbSvc.UpdateAppDataById(ctx.Request.Context(),&xIngressWorkerData)
+	this.AppContext.AppDbSvc.UpdateAppDataById(ctx.Request.Context(), &xIngressWorkerData)
 
-	xConfigData := this.AppContext.AppDbSvc.GetIngressConfigByNamespaceAndVersion(ctx.Request.Context(),xIngressWorkerData.NamespaceId, xRequest.ConfigVersion)
+	xConfigData := this.AppContext.AppDbSvc.GetIngressConfigByNamespaceAndVersion(ctx.Request.Context(), xIngressWorkerData.NamespaceId, xRequest.ConfigVersion)
 
 	xDataContent := protocol.WorkerDataNamespaceDataContent{}
 
