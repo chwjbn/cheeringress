@@ -11,6 +11,7 @@ import (
 	v3 "github.com/chwjbn/go4sky/plugins/gin/v3"
 	"github.com/gin-gonic/gin"
 	"hash/crc32"
+	"io/ioutil"
 	"net/http"
 	"net/http/httputil"
 	"strings"
@@ -165,12 +166,81 @@ func (this *CheerWorkerApp) processActionStatic(ctx *gin.Context, staticInfo pro
 	}()
 
 	xStaticContent := staticInfo.Data
-	if strings.EqualFold(staticInfo.DataType, "Base64Data") {
-		xStaticContent = cheerlib.EncryptBase64Decode(xStaticContent)
+
+	if strings.EqualFold(staticInfo.DataType, "PlainText") {
+		ctx.Data(200,staticInfo.ContentType,[]byte(xStaticContent))
+		return
 	}
 
-	ctx.Header("Content-Type", staticInfo.ContentType)
-	ctx.String(200, xStaticContent)
+	//Base64编码内容
+	if strings.EqualFold(staticInfo.DataType, "Base64Data") {
+		xStaticContent = cheerlib.EncryptBase64Decode(xStaticContent)
+		ctx.Data(200,staticInfo.ContentType,[]byte(xStaticContent))
+		return
+	}
+
+	//Http内容
+	if strings.EqualFold(staticInfo.DataType, "HttpResContent") {
+
+		xContentFilePath,xContentErr:=workerutil.ActionFetchHttpResouce(ctx,staticInfo.Data)
+
+		if xContentErr!=nil{
+			cheerapp.SpanError(xSpan,xContentErr.Error())
+			workerutil.ActionShowErrorPage(ctx, 403, "400404", fmt.Sprintf("获取HTTP资源失败,URL=[%s],错误信息=[%s]",staticInfo.Data,xContentErr.Error()))
+			return
+		}
+
+		xContentFileData,xContentErr:=ioutil.ReadFile(xContentFilePath)
+
+		if xContentErr!=nil{
+			cheerapp.SpanError(xSpan,xContentErr.Error())
+			workerutil.ActionShowErrorPage(ctx, 403, "400405", fmt.Sprintf("获取HTTP资源失败,URL=[%s],错误信息=[%s]",staticInfo.Data,xContentErr.Error()))
+			return
+		}
+
+        ctx.Data(200,staticInfo.ContentType,xContentFileData)
+
+		return
+	}
+
+	//Http打包内容
+	if strings.EqualFold(staticInfo.DataType, "HttpResZip") {
+
+		xContentFilePath,xContentErr:=workerutil.ActionFetchHttpResouce(ctx,staticInfo.Data)
+
+		if xContentErr!=nil{
+			cheerapp.SpanError(xSpan,xContentErr.Error())
+			workerutil.ActionShowErrorPage(ctx, 403, "400404", fmt.Sprintf("获取HTTP资源失败,URL=[%s],错误信息=[%s]",staticInfo.Data,xContentErr.Error()))
+			return
+		}
+
+		if ctx.Request==nil{
+			workerutil.ActionShowErrorPage(ctx, 400, "500400", "非法请求!")
+			return
+		}
+
+		if ctx.Request.URL==nil{
+			workerutil.ActionShowErrorPage(ctx, 400, "500401", "非法请求!")
+			return
+		}
+
+		xContentErr,xContentFileData:=cheerlib.ZipReadStaticFile(xContentFilePath,"",ctx.Request.URL.Path)
+		if xContentErr!=nil{
+			cheerapp.SpanError(xSpan,xContentErr.Error())
+			workerutil.ActionShowErrorPage(ctx, 403, "400405", fmt.Sprintf("获取HTTP压缩资源失败,URL=[%s],错误信息=[%s]",staticInfo.Data,xContentErr.Error()))
+			return
+		}
+
+		xContentType:=cheerlib.WebGetContentType(ctx.Request.URL.Path)
+
+		ctx.Data(200,xContentType,xContentFileData)
+
+		return
+	}
+
+
+	workerutil.ActionShowErrorPage(ctx, 404, "600404", "当前请求的服务不存在.")
+
 }
 
 func (this *CheerWorkerApp) processActionBackend(ctx *gin.Context, backendInfo protocol.WorkerDataActionBackend, backendNodeInfoList []protocol.WorkerDataActionBackendNode) {

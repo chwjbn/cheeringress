@@ -7,6 +7,7 @@ import (
 	"github.com/chwjbn/cheeringress/cheerlib"
 	"github.com/gin-gonic/gin"
 	"go.mongodb.org/mongo-driver/bson"
+	"strings"
 )
 
 func (this *WebAppCtl) CtlIngressActionStaticMapData(ctx *gin.Context) {
@@ -111,6 +112,13 @@ func (this *WebAppCtl) CtlIngressActionStaticAdd(ctx *gin.Context) {
 		return
 	}
 
+	if strings.EqualFold(xRequest.DataType,"HttpResContent")||strings.EqualFold(xRequest.DataType,"HttpResZip"){
+		if !strings.HasPrefix(strings.ToLower(xRequest.Data),"http"){
+			this.ReturnAppError(ctx, "请输入正确的HTTP资源地址!")
+			return
+		}
+	}
+
 	xClientIp := this.GetClientIp(ctx)
 
 	xData.TenantId = cheerlib.EncryptMd5("cheeradmin")
@@ -183,6 +191,13 @@ func (this *WebAppCtl) CtlIngressActionStaticSave(ctx *gin.Context) {
 	if xError != nil {
 		this.ReturnAppError(ctx, xError.Error())
 		return
+	}
+
+	if strings.EqualFold(xRequest.DataType,"HttpResContent")||strings.EqualFold(xRequest.DataType,"HttpResZip"){
+		if !strings.HasPrefix(strings.ToLower(xRequest.Data),"http"){
+			this.ReturnAppError(ctx, "请输入正确的HTTP资源地址!")
+			return
+		}
 	}
 
 	xData := dbmodel.AppDataIngressActionStatic{}

@@ -112,3 +112,17 @@ type WorkerFetchConfigResponse struct {
 	WorkerBaseResponse
 	Data WorkerDataNamespaceDataContent `json:"data"`
 }
+
+
+//获取资源内容
+type WorkerGetResourceDataRequest struct {
+	WorkerBaseRequest
+	ResType string `json:"res_type"`
+	ResId string `json:"res_id"`
+}
+
+type WorkerGetResourceDataResponse struct {
+	WorkerBaseResponse
+	Data string `json:"data"`
+}
+

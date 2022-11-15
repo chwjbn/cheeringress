@@ -1,8 +1,12 @@
 package workerutil
 
 import (
+	"errors"
+	"fmt"
+	"github.com/chwjbn/cheeringress/cheerapp"
 	"github.com/chwjbn/cheeringress/cheerlib"
 	"github.com/gin-gonic/gin"
+	"path"
 	"strings"
 )
 
@@ -17,4 +21,34 @@ func ActionShowErrorPage(ctx *gin.Context, httpStatus int, errorCode string, err
 
 	ctx.Header("Content-Type", "text/html")
 	ctx.String(httpStatus, xPageContent)
+}
+
+func ActionFetchHttpResouce(ctx *gin.Context,url string) (string,error) {
+
+	xSpan := cheerapp.SpanBeginBizFunction(ctx.Request.Context(), "workerutil.ActionFetchHttpResouce")
+	defer func() {
+		cheerapp.SpanEnd(xSpan)
+	}()
+
+	cheerapp.SpanTag(xSpan,"url",url)
+
+	xFileRoot:=path.Join(cheerlib.ApplicationBaseDirectory(),"data","res")
+	if !cheerlib.DirectoryExists(xFileRoot){
+		cheerlib.DirectoryCreateDirectory(xFileRoot)
+	}
+
+	xFilePath:=path.Join(xFileRoot,cheerlib.EncryptMd5(url))
+
+	cheerapp.SpanTag(xSpan,"filepath",xFilePath)
+
+	if cheerlib.FileExists(xFilePath){
+		return xFilePath,nil
+	}
+
+	xError,_:=cheerlib.NetHttpDownloadFile(url,xFilePath)
+	if xError!=nil{
+		return "", errors.New(fmt.Sprintf("Download Url=[%s] To FilePath=[%s] Error=[%s]",url,xFilePath,xError.Error()))
+	}
+
+	return xFilePath,nil
 }

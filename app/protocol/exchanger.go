@@ -142,6 +142,40 @@ func (this *Exchanger) FetchConfig(token string, configVer string) WorkerFetchCo
 	return xResp
 }
 
+func (this *Exchanger) GetResourceData(token string, resType string,resId string) WorkerGetResourceDataResponse {
+
+	xResp := WorkerGetResourceDataResponse{}
+	xResp.Code = "500"
+	xResp.Message = "Internal Error"
+
+	xApiPath := "/xapi/worker/get-resource-data"
+
+	xReq := WorkerGetResourceDataRequest{}
+	xReq.ResType=resType
+	xReq.ResId=resId
+
+	xRespCall := WorkerGetResourceDataResponse{}
+
+	xApiCallErr := this.callApi(token, xApiPath, xReq, &xRespCall)
+	if xApiCallErr != nil {
+		xResp.Code = "555"
+		xResp.Message = xApiCallErr.Error()
+		return xResp
+	}
+
+	if len(xRespCall.Code) < 1 {
+		xResp.Code = "505"
+		xResp.Message = fmt.Sprintf("call [%s%s] faild", this.mMasterHost, xApiPath)
+		return xResp
+	}
+
+	xResp.Code = xRespCall.Code
+	xResp.Message = xRespCall.Message
+	xResp.Data = xRespCall.Data
+
+	return xResp
+}
+
 func (this *Exchanger) callApi(authData string, apiPath string, reqData interface{}, respData interface{}) error {
 
 	var xError error

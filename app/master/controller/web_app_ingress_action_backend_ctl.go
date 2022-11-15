@@ -7,6 +7,7 @@ import (
 	"github.com/chwjbn/cheeringress/cheerlib"
 	"github.com/gin-gonic/gin"
 	"go.mongodb.org/mongo-driver/bson"
+	"strings"
 )
 
 func (this *WebAppCtl) CtlIngressActionBackendMapData(ctx *gin.Context) {
@@ -334,7 +335,7 @@ func (this *WebAppCtl) CtlIngressActionBackendNodeAdd(ctx *gin.Context) {
 	xData.NamespaceId = xRequest.NamespaceId
 	xData.BackendId = xRequest.BackendId
 	xData.Title = xRequest.Title
-	xData.ServerHost = xRequest.ServerHost
+	xData.ServerHost = strings.TrimSpace(xRequest.ServerHost)
 	xData.ServerPort = xRequest.ServerPort
 	xData.WeightScore = xRequest.WeightScore
 

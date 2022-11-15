@@ -42,17 +42,22 @@ func WebGetContentType(urlPath string) string {
 
 func WebReadStaticFile(urlPath string) (error, []byte) {
 
+	xZipFilePath := path.Join(ApplicationBaseDirectory(), "config", "webui.zip")
+	return ZipReadStaticFile(xZipFilePath,"dist",urlPath)
+
+}
+
+func ZipReadStaticFile(zipFilePath string,baseDir string,urlPath string) (error, []byte) {
+
 	var xError error = nil
 	xFileContent := []byte{}
 
-	xZipFilePath := path.Join(ApplicationBaseDirectory(), "config", "webui.zip")
-
-	if !FileExists(xZipFilePath) {
-		xError = errors.New("webui Not Found.")
+	if !FileExists(zipFilePath) {
+		xError = errors.New(fmt.Sprintf("[%s] Not Found.",zipFilePath))
 		return xError, xFileContent
 	}
 
-	xZipFile, xZipFileErr := zip.OpenReader(xZipFilePath)
+	xZipFile, xZipFileErr := zip.OpenReader(zipFilePath)
 	if xZipFileErr != nil {
 		xError = xZipFileErr
 		return xError, xFileContent
@@ -60,13 +65,16 @@ func WebReadStaticFile(urlPath string) (error, []byte) {
 
 	defer xZipFile.Close()
 
-	xMatchFile := "dist" + urlPath
+	xMatchFile := baseDir + urlPath
 	xMatchFileWithIndex := xMatchFile
 	if strings.HasSuffix(xMatchFileWithIndex, "/") {
 		xMatchFileWithIndex = xMatchFileWithIndex + "index.html"
 	} else {
 		xMatchFileWithIndex = xMatchFileWithIndex + "/index.html"
 	}
+
+	xMatchFile=strings.TrimLeft(xMatchFile,"/")
+	xMatchFileWithIndex=strings.TrimLeft(xMatchFileWithIndex,"/")
 
 	for _, xZipFileItem := range xZipFile.File {
 
@@ -97,7 +105,7 @@ func WebReadStaticFile(urlPath string) (error, []byte) {
 
 	}
 
-	xError = errors.New(fmt.Sprintf("%s Not Found.", urlPath))
+	xError = errors.New(fmt.Sprintf("[%s] Not Found.", urlPath))
 	return xError, xFileContent
 
 }
