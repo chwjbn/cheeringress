@@ -1,2 +1,2 @@
-app_mode: master
+app_mode: mix
 skyapm_oap_grpc_addr: 192.168.200.100:11800

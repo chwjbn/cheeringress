@@ -284,8 +284,24 @@ func (this *CheerWorkerApp) processActionBackend(ctx *gin.Context, backendInfo p
 		req.Host = xBackendNodeAddr
 	}
 
-	xProxy := &httputil.ReverseProxy{Director: xDirector}
+	xProxy := &httputil.ReverseProxy{Director: xDirector, ErrorHandler: this.processActionBackendErrorHandler}
 	xProxy.ServeHTTP(ctx.Writer, ctx.Request)
+}
+
+func (this *CheerWorkerApp) processActionBackendErrorHandler(resp http.ResponseWriter, req *http.Request, err error) {
+
+	xSpan := cheerapp.SpanBeginBizFunction(req.Context(), "CheerWorkerApp.processActionBackendErrorHandler")
+	defer func() {
+		cheerapp.SpanEnd(xSpan)
+	}()
+
+	cheerapp.SpanError(xSpan, err.Error())
+
+	xPageContent := workerutil.GetShowErrorPageContent("500503", "后端服务节点当前无法正确响应.")
+
+	resp.WriteHeader(http.StatusServiceUnavailable)
+
+	resp.Write([]byte(xPageContent))
 }
 
 func (this *CheerWorkerApp) getMatchedSiteInfo(ctx *gin.Context) protocol.WorkerDataSite {

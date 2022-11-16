@@ -23,10 +23,6 @@ func (this *AccountLoginRequest) Validate() error {
 		validation.Field(&this.ImageCodeData, validation.Required.Error("请输入图形验证码!")),
 	)
 
-	if xError != nil {
-		return xError
-	}
-
-	return nil
+	return GetValidateError(xError)
 
 }

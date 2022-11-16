@@ -91,6 +91,20 @@ func RunWorkerApp() error {
 	return xError
 }
 
+func RunMixApp() error {
+
+	var xError error
+
+	go func() {
+		RunMasterApp()
+	}()
+
+	xError = RunWorkerApp()
+
+	return xError
+
+}
+
 func AppWork() error {
 
 	var xError error
@@ -149,6 +163,11 @@ func AppWork() error {
 
 	if strings.EqualFold(cfg.AppMode, "worker") {
 		xError = RunWorkerApp()
+		return xError
+	}
+
+	if strings.EqualFold(cfg.AppMode, "mix") {
+		xError = RunMixApp()
 		return xError
 	}
 
