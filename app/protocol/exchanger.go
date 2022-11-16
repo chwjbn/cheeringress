@@ -142,7 +142,7 @@ func (this *Exchanger) FetchConfig(token string, configVer string) WorkerFetchCo
 	return xResp
 }
 
-func (this *Exchanger) GetResourceData(token string, resType string,resId string) WorkerGetResourceDataResponse {
+func (this *Exchanger) GetResourceData(token string, resType string, resId string) WorkerGetResourceDataResponse {
 
 	xResp := WorkerGetResourceDataResponse{}
 	xResp.Code = "500"
@@ -151,8 +151,8 @@ func (this *Exchanger) GetResourceData(token string, resType string,resId string
 	xApiPath := "/xapi/worker/get-resource-data"
 
 	xReq := WorkerGetResourceDataRequest{}
-	xReq.ResType=resType
-	xReq.ResId=resId
+	xReq.ResType = resType
+	xReq.ResId = resId
 
 	xRespCall := WorkerGetResourceDataResponse{}
 

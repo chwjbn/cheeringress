@@ -23,32 +23,32 @@ func ActionShowErrorPage(ctx *gin.Context, httpStatus int, errorCode string, err
 	ctx.String(httpStatus, xPageContent)
 }
 
-func ActionFetchHttpResouce(ctx *gin.Context,url string) (string,error) {
+func ActionFetchHttpResouce(ctx *gin.Context, url string) (string, error) {
 
 	xSpan := cheerapp.SpanBeginBizFunction(ctx.Request.Context(), "workerutil.ActionFetchHttpResouce")
 	defer func() {
 		cheerapp.SpanEnd(xSpan)
 	}()
 
-	cheerapp.SpanTag(xSpan,"url",url)
+	cheerapp.SpanTag(xSpan, "url", url)
 
-	xFileRoot:=path.Join(cheerlib.ApplicationBaseDirectory(),"data","res")
-	if !cheerlib.DirectoryExists(xFileRoot){
+	xFileRoot := path.Join(cheerlib.ApplicationBaseDirectory(), "data", "res")
+	if !cheerlib.DirectoryExists(xFileRoot) {
 		cheerlib.DirectoryCreateDirectory(xFileRoot)
 	}
 
-	xFilePath:=path.Join(xFileRoot,cheerlib.EncryptMd5(url))
+	xFilePath := path.Join(xFileRoot, cheerlib.EncryptMd5(url))
 
-	cheerapp.SpanTag(xSpan,"filepath",xFilePath)
+	cheerapp.SpanTag(xSpan, "filepath", xFilePath)
 
-	if cheerlib.FileExists(xFilePath){
-		return xFilePath,nil
+	if cheerlib.FileExists(xFilePath) {
+		return xFilePath, nil
 	}
 
-	xError,_:=cheerlib.NetHttpDownloadFile(url,xFilePath)
-	if xError!=nil{
-		return "", errors.New(fmt.Sprintf("Download Url=[%s] To FilePath=[%s] Error=[%s]",url,xFilePath,xError.Error()))
+	xError, _ := cheerlib.NetHttpDownloadFile(url, xFilePath)
+	if xError != nil {
+		return "", errors.New(fmt.Sprintf("Download Url=[%s] To FilePath=[%s] Error=[%s]", url, xFilePath, xError.Error()))
 	}
 
-	return xFilePath,nil
+	return xFilePath, nil
 }

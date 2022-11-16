@@ -112,8 +112,8 @@ func (this *WebAppCtl) CtlIngressActionStaticAdd(ctx *gin.Context) {
 		return
 	}
 
-	if strings.EqualFold(xRequest.DataType,"HttpResContent")||strings.EqualFold(xRequest.DataType,"HttpResZip"){
-		if !strings.HasPrefix(strings.ToLower(xRequest.Data),"http"){
+	if strings.EqualFold(xRequest.DataType, "HttpResContent") || strings.EqualFold(xRequest.DataType, "HttpResZip") {
+		if !strings.HasPrefix(strings.ToLower(xRequest.Data), "http") {
 			this.ReturnAppError(ctx, "请输入正确的HTTP资源地址!")
 			return
 		}
@@ -193,8 +193,8 @@ func (this *WebAppCtl) CtlIngressActionStaticSave(ctx *gin.Context) {
 		return
 	}
 
-	if strings.EqualFold(xRequest.DataType,"HttpResContent")||strings.EqualFold(xRequest.DataType,"HttpResZip"){
-		if !strings.HasPrefix(strings.ToLower(xRequest.Data),"http"){
+	if strings.EqualFold(xRequest.DataType, "HttpResContent") || strings.EqualFold(xRequest.DataType, "HttpResZip") {
+		if !strings.HasPrefix(strings.ToLower(xRequest.Data), "http") {
 			this.ReturnAppError(ctx, "请输入正确的HTTP资源地址!")
 			return
 		}

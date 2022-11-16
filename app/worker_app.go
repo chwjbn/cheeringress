@@ -168,37 +168,37 @@ func (this *CheerWorkerApp) processActionStatic(ctx *gin.Context, staticInfo pro
 	xStaticContent := staticInfo.Data
 
 	if strings.EqualFold(staticInfo.DataType, "PlainText") {
-		ctx.Data(200,staticInfo.ContentType,[]byte(xStaticContent))
+		ctx.Data(200, staticInfo.ContentType, []byte(xStaticContent))
 		return
 	}
 
 	//Base64编码内容
 	if strings.EqualFold(staticInfo.DataType, "Base64Data") {
 		xStaticContent = cheerlib.EncryptBase64Decode(xStaticContent)
-		ctx.Data(200,staticInfo.ContentType,[]byte(xStaticContent))
+		ctx.Data(200, staticInfo.ContentType, []byte(xStaticContent))
 		return
 	}
 
 	//Http内容
 	if strings.EqualFold(staticInfo.DataType, "HttpResContent") {
 
-		xContentFilePath,xContentErr:=workerutil.ActionFetchHttpResouce(ctx,staticInfo.Data)
+		xContentFilePath, xContentErr := workerutil.ActionFetchHttpResouce(ctx, staticInfo.Data)
 
-		if xContentErr!=nil{
-			cheerapp.SpanError(xSpan,xContentErr.Error())
-			workerutil.ActionShowErrorPage(ctx, 403, "400404", fmt.Sprintf("获取HTTP资源失败,URL=[%s],错误信息=[%s]",staticInfo.Data,xContentErr.Error()))
+		if xContentErr != nil {
+			cheerapp.SpanError(xSpan, xContentErr.Error())
+			workerutil.ActionShowErrorPage(ctx, 403, "400404", fmt.Sprintf("获取HTTP资源失败,URL=[%s],错误信息=[%s]", staticInfo.Data, xContentErr.Error()))
 			return
 		}
 
-		xContentFileData,xContentErr:=ioutil.ReadFile(xContentFilePath)
+		xContentFileData, xContentErr := ioutil.ReadFile(xContentFilePath)
 
-		if xContentErr!=nil{
-			cheerapp.SpanError(xSpan,xContentErr.Error())
-			workerutil.ActionShowErrorPage(ctx, 403, "400405", fmt.Sprintf("获取HTTP资源失败,URL=[%s],错误信息=[%s]",staticInfo.Data,xContentErr.Error()))
+		if xContentErr != nil {
+			cheerapp.SpanError(xSpan, xContentErr.Error())
+			workerutil.ActionShowErrorPage(ctx, 403, "400405", fmt.Sprintf("获取HTTP资源失败,URL=[%s],错误信息=[%s]", staticInfo.Data, xContentErr.Error()))
 			return
 		}
 
-        ctx.Data(200,staticInfo.ContentType,xContentFileData)
+		ctx.Data(200, staticInfo.ContentType, xContentFileData)
 
 		return
 	}
@@ -206,38 +206,37 @@ func (this *CheerWorkerApp) processActionStatic(ctx *gin.Context, staticInfo pro
 	//Http打包内容
 	if strings.EqualFold(staticInfo.DataType, "HttpResZip") {
 
-		xContentFilePath,xContentErr:=workerutil.ActionFetchHttpResouce(ctx,staticInfo.Data)
+		xContentFilePath, xContentErr := workerutil.ActionFetchHttpResouce(ctx, staticInfo.Data)
 
-		if xContentErr!=nil{
-			cheerapp.SpanError(xSpan,xContentErr.Error())
-			workerutil.ActionShowErrorPage(ctx, 403, "400404", fmt.Sprintf("获取HTTP资源失败,URL=[%s],错误信息=[%s]",staticInfo.Data,xContentErr.Error()))
+		if xContentErr != nil {
+			cheerapp.SpanError(xSpan, xContentErr.Error())
+			workerutil.ActionShowErrorPage(ctx, 403, "400404", fmt.Sprintf("获取HTTP资源失败,URL=[%s],错误信息=[%s]", staticInfo.Data, xContentErr.Error()))
 			return
 		}
 
-		if ctx.Request==nil{
+		if ctx.Request == nil {
 			workerutil.ActionShowErrorPage(ctx, 400, "500400", "非法请求!")
 			return
 		}
 
-		if ctx.Request.URL==nil{
+		if ctx.Request.URL == nil {
 			workerutil.ActionShowErrorPage(ctx, 400, "500401", "非法请求!")
 			return
 		}
 
-		xContentErr,xContentFileData:=cheerlib.ZipReadStaticFile(xContentFilePath,"",ctx.Request.URL.Path)
-		if xContentErr!=nil{
-			cheerapp.SpanError(xSpan,xContentErr.Error())
-			workerutil.ActionShowErrorPage(ctx, 403, "400405", fmt.Sprintf("获取HTTP压缩资源失败,URL=[%s],错误信息=[%s]",staticInfo.Data,xContentErr.Error()))
+		xContentErr, xContentFileData := cheerlib.ZipReadStaticFile(xContentFilePath, "", ctx.Request.URL.Path)
+		if xContentErr != nil {
+			cheerapp.SpanError(xSpan, xContentErr.Error())
+			workerutil.ActionShowErrorPage(ctx, 403, "400405", fmt.Sprintf("获取HTTP压缩资源失败,URL=[%s],错误信息=[%s]", staticInfo.Data, xContentErr.Error()))
 			return
 		}
 
-		xContentType:=cheerlib.WebGetContentType(ctx.Request.URL.Path)
+		xContentType := cheerlib.WebGetContentType(ctx.Request.URL.Path)
 
-		ctx.Data(200,xContentType,xContentFileData)
+		ctx.Data(200, xContentType, xContentFileData)
 
 		return
 	}
-
 
 	workerutil.ActionShowErrorPage(ctx, 404, "600404", "当前请求的服务不存在.")
 
