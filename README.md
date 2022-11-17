@@ -18,13 +18,39 @@
 **发布文件说明**
 ```go
 
-cheer_ingress_win.exe
-cheer_ingress_linux
-config/app.yml
-config/app_master.yml
-config/app_worker.yml
-config/webui.zip
+cheer_ingress_win.exe        //window x64 主程序
+cheer_ingress_linux          //linux x64 主程序
+config/app.yml               //应用全局配置
+config/app_master.yml        //master节点配置
+config/app_worker.yml        //worker节点配置
+config/webui.zip             //master节点管理页面前端资源
 ```
+
+**配置文件说明**
+- app.yml
+
+| 配置项 | 配置值 | 说明 |
+| --- | --- | --- |
+| app_mode | master/worker/mix | 网关运行模式（master：管理与配置中心;worker：业务工作网关；mix:同时运行一个master跟一个worker，单机模式） |
+| skyapm_oap_grpc_addr | skywalking-oap:11180 | skywalking的oap地址，用来监控网关性能 |
+
+
+- master.yml
+
+| 配置项 | 配置值 | 说明 |
+| --- | --- | --- |
+| server_addr | 0.0.0.0 | 管理与配置网关工作监听地址 |
+| server_port | 16666 | 管理与配置网关工作监听端口 |
+| db_app_mongodb_uri | mongodb://127.0.0.1:30000/db_cheer_ingress | mongodb连接字符串 |
+
+- worker.yml
+
+| 配置项 | 配置值 | 说明 |
+| --- | --- | --- |
+| server_addr | 0.0.0.0 | 业务工作网关监听地址 |
+| server_port | 16666 | 业务工作网关监听端口 |
+| master_host | http://127.0.0.1:16666 | master节点的访问地址 |
+| namespace_id | a62624e2b29fee272fab2f02ca379b92 | 网关空间的ID，需要先安装管理端在管理端创建网关空间后复制对应的空间ID |
 #### Linux环境
 - 下载发布文件：https://github.com/chwjbn/cheeringress/releases/download/v1.0.0/v1.0.0.zip
 #### Windows环境
