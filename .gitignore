@@ -1,2 +1,9 @@
 .idea
-/vendor
+vendor
+out
+go.sum
+
+node_modules
+dist
+.umi
+.umi-production
