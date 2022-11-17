@@ -1,5 +1,6 @@
 # cheeringress-简单好用的WEB应用网关
 
+## 背景
 ### 痛点分析
 - nginx/apache等web服务器的配置对于绝大部分的开发与运维工程师门槛比较高，实际研发过程中，效率低，而且容易出质量事故
 - 目前流行的nginx/openresty产品部署比较繁琐，业务调整效率比较低
@@ -12,7 +13,8 @@
 - 响应动作支持反向代理，对标nginx的upstream能力，同时后端地址支持域名，支持云原生环境下网关需求
 - 跨平台二进制制品，除了配置中心需要mongodb外，无任何第三方环境依赖
 
-### 安装配置
+## 安装配置
+### 发布文件说明
 目前发布文件支持环境如下：
 - linux 64位
 - windows 64位
@@ -58,7 +60,7 @@ config/webui.zip             //master节点管理页面前端资源
 - 下载发布文件：https://github.com/chwjbn/cheeringress/releases/download/v1.0.0/v1.0.0.zip
 ### DockerCompose环境
 ### K8S环境
-### 产品演示
+## 产品演示
 ![image](doc/img/0001.jpg)
 ![image](doc/img/0002.jpg)
 ![image](doc/img/0003.jpg)
