@@ -35,7 +35,7 @@ config/webui.zip             //master节点管理页面前端资源
 | 配置项 | 配置值 | 说明 |
 | --- | --- | --- |
 | app_mode | master/worker/mix | 网关运行模式（master：管理与配置中心;worker：业务工作网关；mix:同时运行一个master跟一个worker，单机模式） |
-| skyapm_oap_grpc_addr | skywalking-oap:11180 | skywalking的oap地址，用来监控网关性能 |
+| skyapm_oap_grpc_addr | skywalking-oap:11180 | skywalking的oap地址，用来监控网关性能，可以不配置，不影响整体使用 |
 
 
 - master.yml
