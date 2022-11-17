@@ -58,6 +58,7 @@ config/webui.zip             //master节点管理页面前端资源
 | namespace_id | a62624e2b29fee272fab2f02ca379b92 | 网关空间的ID，需要先安装管理端在管理端创建网关空间后复制对应的空间ID |
 
 ### 安装步骤
+**cheeringress管理与配置端需要mongodb作为数据存储服务，因此先安装mongodb**
 #### Linux环境
 - 下载发布文件：https://github.com/chwjbn/cheeringress/releases/download/v1.0.0/v1.0.0.zip
 - 将文件解压到 /data/app/cheeringress
