@@ -18,7 +18,7 @@
 目前发布文件支持环境如下：
 - linux 64位
 - windows 64位
-**发布文件说明**
+##### 发布文件说明
 ```go
 
 cheer_ingress_win.exe        //window x64 主程序
@@ -29,7 +29,7 @@ config/app_worker.yml        //worker节点配置
 config/webui.zip             //master节点管理页面前端资源
 ```
 
-**配置文件说明**
+##### 配置文件说明
 - app.yml
 
 | 配置项 | 配置值 | 说明 |
@@ -54,10 +54,36 @@ config/webui.zip             //master节点管理页面前端资源
 | server_port | 16666 | 业务工作网关监听端口 |
 | master_host | http://127.0.0.1:16666 | master节点的访问地址 |
 | namespace_id | a62624e2b29fee272fab2f02ca379b92 | 网关空间的ID，需要先安装管理端在管理端创建网关空间后复制对应的空间ID |
+
+### 安装步骤
 #### Linux环境
 - 下载发布文件：https://github.com/chwjbn/cheeringress/releases/download/v1.0.0/v1.0.0.zip
+- 将文件解压到 /data/app/cheeringress
+- 修改配置文件，见配置文件说明
+- 执行主程序安装
+```go
+/data/app/cheeringress/cheer_ingress_linux install
+```
+- 启动cheeringress服务
+```go
+systemctl start cheeringress
+```
+- 设置cheeringress开机自启动
+```go
+systemctl enable cheeringress
+```
 #### Windows环境
 - 下载发布文件：https://github.com/chwjbn/cheeringress/releases/download/v1.0.0/v1.0.0.zip
+- 将文件解压到 D:/app/cheeringress
+- 修改配置文件，见配置文件说明
+- 执行主程序安装
+```go
+/data/app/cheeringress/cheer_ingress_win install
+```
+- 启动cheeringress服务
+```go
+net start cheeringress
+```
 ### DockerCompose环境
 ### K8S环境
 ## 产品演示
