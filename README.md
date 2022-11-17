@@ -11,6 +11,16 @@
 - 响应动作支持静态资源，包含文本、base64编码内容、远程http文件、远程http压缩包内文件
 - 响应动作支持反向代理，对标nginx的upstream能力，同时后端地址支持域名，支持云原生环境下网关需求
 
+### 安装配置
+目前发布文件支持环境如下：
+- linux 64位
+- windows 64位
+#### Linux环境
+- 下载发布文件：https://github.com/chwjbn/cheeringress/releases/download/v1.0.0/v1.0.0.zip
+#### Windows环境
+- 下载发布文件：https://github.com/chwjbn/cheeringress/releases/download/v1.0.0/v1.0.0.zip
+### DockerCompose环境
+### K8S环境
 ### 产品演示
 ![image](doc/img/0001.jpg)
 ![image](doc/img/0002.jpg)
