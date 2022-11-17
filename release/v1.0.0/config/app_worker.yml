@@ -1,0 +1,5 @@
+server_addr: 0.0.0.0
+server_port: 26868
+
+master_host: http://127.0.0.1:16666
+namespace_id: a62624e2b29fee272fab2f02ca379b92
