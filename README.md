@@ -15,6 +15,16 @@
 目前发布文件支持环境如下：
 - linux 64位
 - windows 64位
+**发布文件说明**
+```go
+
+cheer_ingress_win.exe
+cheer_ingress_linux
+config/app.yml
+config/app_master.yml
+config/app_worker.yml
+config/webui.zip
+```
 #### Linux环境
 - 下载发布文件：https://github.com/chwjbn/cheeringress/releases/download/v1.0.0/v1.0.0.zip
 #### Windows环境
