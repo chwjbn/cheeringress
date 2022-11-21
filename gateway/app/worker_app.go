@@ -280,8 +280,7 @@ func (this *CheerWorkerApp) processActionBackend(ctx *gin.Context, backendInfo p
 
 	xDirector := func(req *http.Request) {
 		req.URL.Scheme = "http"
-		req.URL.Host = xBackendNodeAddr
-		req.Host = xBackendNodeAddr
+		req.URL.Host=xBackendNodeAddr
 	}
 
 	xProxy := &httputil.ReverseProxy{Director: xDirector, ErrorHandler: this.processActionBackendErrorHandler}
