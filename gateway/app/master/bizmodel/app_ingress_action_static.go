@@ -33,7 +33,7 @@ func (this *IngressActionStaticAddRequest) Validate() error {
 		validation.Field(&this.NamespaceId, validation.Required.Error("请选择网关空间!")),
 		validation.Field(&this.Title, validation.Required.Error("请输入资源名称!"), validation.Length(4, 50).Error("资源名称有效长度4-50!")),
 		validation.Field(&this.ContentType, validation.Required.Error("请选择资源类型!")),
-		validation.Field(&this.DataType, validation.Required.Error("请选择数据类型!"), validation.In("PlainText", "Base64Data", "HttpResContent", "HttpResZip").Error("请选择正确的数据类型!")),
+		validation.Field(&this.DataType, validation.Required.Error("请选择数据类型!"), validation.In("PlainText", "Base64Data", "HttpResContent", "HttpResZip","Http301Redirect").Error("请选择正确的数据类型!")),
 		validation.Field(&this.Data, validation.Required.Error("请输入数据内容!"), validation.Length(0, 1024).Error("数据内容最大长度为1024!")),
 	)
 
@@ -47,7 +47,7 @@ func (this *IngressActionStaticSaveRequest) Validate() error {
 		validation.Field(&this.NamespaceId, validation.Required.Error("请选择网关空间!")),
 		validation.Field(&this.Title, validation.Required.Error("请输入资源名称!"), validation.Length(4, 50).Error("资源名称有效长度4-50!")),
 		validation.Field(&this.ContentType, validation.Required.Error("请选择资源类型!")),
-		validation.Field(&this.DataType, validation.Required.Error("请选择数据类型!"), validation.In("PlainText", "Base64Data", "HttpResContent", "HttpResZip").Error("请选择正确的数据类型!")),
+		validation.Field(&this.DataType, validation.Required.Error("请选择数据类型!"), validation.In("PlainText", "Base64Data", "HttpResContent", "HttpResZip","Http301Redirect").Error("请选择正确的数据类型!")),
 		validation.Field(&this.Data, validation.Required.Error("请输入数据内容!"), validation.Length(0, 1024).Error("数据内容最大长度为1024!")),
 		validation.Field(&this.State, validation.Required.Error("请选择状态!"), validation.In("enable", "disable").Error("请选择正确的状态!")),
 	)

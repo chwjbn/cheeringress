@@ -125,6 +125,16 @@ func (this *CheerWorkerApp) processAction(ctx *gin.Context, actionType string, a
 
 	cheerapp.LogInfoWithContext(ctx.Request.Context(), "CheerWorkerApp.processAction actionType=[%s],actionData=[%v]", actionType, actionData)
 
+	if ctx.Request == nil {
+		workerutil.ActionShowErrorPage(ctx, 400, "500400", "非法请求!")
+		return
+	}
+
+	if ctx.Request.URL == nil {
+		workerutil.ActionShowErrorPage(ctx, 400, "500401", "非法请求!")
+		return
+	}
+
 	if strings.EqualFold(actionType, "backend") {
 
 		xBackendInfo := this.mConfigService.GetActionBackendInfo(actionData)
@@ -214,16 +224,6 @@ func (this *CheerWorkerApp) processActionStatic(ctx *gin.Context, staticInfo pro
 			return
 		}
 
-		if ctx.Request == nil {
-			workerutil.ActionShowErrorPage(ctx, 400, "500400", "非法请求!")
-			return
-		}
-
-		if ctx.Request.URL == nil {
-			workerutil.ActionShowErrorPage(ctx, 400, "500401", "非法请求!")
-			return
-		}
-
 		xContentErr, xContentFileData := cheerlib.ZipReadStaticFile(xContentFilePath, "", ctx.Request.URL.Path)
 		if xContentErr != nil {
 			cheerapp.SpanError(xSpan, xContentErr.Error())
@@ -235,6 +235,17 @@ func (this *CheerWorkerApp) processActionStatic(ctx *gin.Context, staticInfo pro
 
 		ctx.Data(200, xContentType, xContentFileData)
 
+		return
+	}
+
+	if strings.EqualFold(staticInfo.DataType,"Http301Redirect"){
+
+		if len(staticInfo.Data)<1{
+			workerutil.ActionShowErrorPage(ctx, 404, "400404", fmt.Sprintf("不正确的跳转参数=[%s]", staticInfo.Data))
+			return
+		}
+
+		ctx.Redirect(301,staticInfo.Data)
 		return
 	}
 
