@@ -483,6 +483,7 @@ const DataMapAppDataIngressActionStaticDataType = {
   Base64Data: { text: 'BASE64编码数据', status: 'Base64Data' },
   HttpResContent: { text: 'HTTP内容资源', status: 'HttpResContent' },
   HttpResZip: { text: 'HTTP压缩包资源', status: 'HttpResZip' },
+  Http301Redirect: { text: 'HTTP重定向301', status: 'Http301Redirect' },
 };
 
 const DataMapAppDataIngressSiteAuthNeed = {
