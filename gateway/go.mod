@@ -4,7 +4,7 @@ go 1.17
 
 require (
 	github.com/alexmullins/zip v0.0.0-20180717182244-4affb64b04d0
-	github.com/chwjbn/go4sky v1.1.3
+	github.com/chwjbn/go4sky v1.1.5
 	github.com/gin-gonic/gin v1.8.1
 	github.com/go-ozzo/ozzo-validation v3.6.0+incompatible
 	github.com/kardianos/service v1.2.2

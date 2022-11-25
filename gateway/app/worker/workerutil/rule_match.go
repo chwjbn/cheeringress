@@ -7,6 +7,7 @@ import (
 	"strings"
 )
 
+
 func GetMatchContext(ctx *gin.Context) map[string]interface{} {
 
 	xDataMap := make(map[string]interface{})
@@ -19,7 +20,6 @@ func GetMatchContext(ctx *gin.Context) map[string]interface{} {
 	xDataMap["s_client_ip"] = ctx.ClientIP()
 
 	return xDataMap
-
 }
 
 //字符串规则匹配
