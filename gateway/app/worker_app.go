@@ -175,6 +175,11 @@ func (this *CheerWorkerApp) processActionStatic(ctx *gin.Context, staticInfo pro
 		cheerapp.SpanEnd(xSpan)
 	}()
 
+
+	cheerapp.SpanTag(xSpan,"ContentType",staticInfo.ContentType)
+	cheerapp.SpanTag(xSpan,"DataType",staticInfo.DataType)
+	cheerapp.SpanTag(xSpan,"Data",staticInfo.Data)
+
 	xStaticContent := staticInfo.Data
 
 	if strings.EqualFold(staticInfo.DataType, "PlainText") {
@@ -256,7 +261,6 @@ func (this *CheerWorkerApp) processActionStatic(ctx *gin.Context, staticInfo pro
 func (this *CheerWorkerApp) processActionBackend(ctx *gin.Context, backendInfo protocol.WorkerDataActionBackend, backendNodeInfoList []protocol.WorkerDataActionBackendNode) {
 
 	xSpan := cheerapp.SpanBeginBizFunction(ctx.Request.Context(), "CheerWorkerApp.processActionBackend")
-
 	xExitSpan:=cheerapp.SpanBeginHttpClient(ctx.Request.Context(),ctx.Request)
 
 	defer func() {
@@ -297,6 +301,8 @@ func (this *CheerWorkerApp) processActionBackend(ctx *gin.Context, backendInfo p
 		req.URL.Scheme = "http"
 		req.URL.Host=xBackendNodeAddr
 	}
+
+	cheerapp.SpanTag(xSpan,"BackendNodeAddr",xBackendNodeAddr)
 
 	xProxy := &httputil.ReverseProxy{Director: xDirector, ErrorHandler: this.processActionBackendErrorHandler}
 	xProxy.ServeHTTP(ctx.Writer, ctx.Request)
