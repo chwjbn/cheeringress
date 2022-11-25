@@ -6,6 +6,7 @@ import (
 	"github.com/chwjbn/cheeringress/cheerlib"
 	"github.com/chwjbn/go4sky"
 	"github.com/chwjbn/go4sky/reporter"
+	"net/http"
 	"os"
 	"time"
 
@@ -151,4 +152,32 @@ func SpanBeginBizFunction(ctx context.Context, operName string) go4sky.Span {
 
 	return xSpan
 
+}
+
+func SpanBeginHttpClient(ctx context.Context,req *http.Request) go4sky.Span {
+
+	var xSpan go4sky.Span
+
+	xSkyapmTracer := go4sky.GetGlobalTracer()
+	if xSkyapmTracer == nil {
+		return xSpan
+	}
+
+	xOpName:=fmt.Sprintf("/%s%s", req.Method, req.URL.Path)
+
+	xSpan, _= xSkyapmTracer.CreateExitSpan(ctx, xOpName, req.Host, func(key, value string) error {
+		req.Header.Set(key, value)
+		return nil
+	})
+
+	if xSpan == nil {
+		return xSpan
+	}
+
+	xSpan.SetComponent(5005)
+	xSpan.Tag(go4sky.TagHTTPMethod, req.Method)
+	xSpan.Tag(go4sky.TagURL, req.URL.String())
+	xSpan.SetSpanLayer(agentv3.SpanLayer_Http)
+
+	return xSpan
 }

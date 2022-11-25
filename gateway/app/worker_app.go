@@ -256,8 +256,12 @@ func (this *CheerWorkerApp) processActionStatic(ctx *gin.Context, staticInfo pro
 func (this *CheerWorkerApp) processActionBackend(ctx *gin.Context, backendInfo protocol.WorkerDataActionBackend, backendNodeInfoList []protocol.WorkerDataActionBackendNode) {
 
 	xSpan := cheerapp.SpanBeginBizFunction(ctx.Request.Context(), "CheerWorkerApp.processActionBackend")
+
+	xExitSpan:=cheerapp.SpanBeginHttpClient(ctx.Request.Context(),ctx.Request)
+
 	defer func() {
 		cheerapp.SpanEnd(xSpan)
+		cheerapp.SpanEnd(xExitSpan)
 	}()
 
 	xBackendNodeInfo := protocol.WorkerDataActionBackendNode{}
