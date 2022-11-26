@@ -1,7 +1,8 @@
-package workerutil
+package cheerapp
 
 import (
 	"bytes"
+	"context"
 	"errors"
 	"fmt"
 	"github.com/chwjbn/go4sky"
@@ -13,28 +14,50 @@ import (
 	"time"
 )
 
-func HttpDoData(tracer *go4sky.Tracer,method string,url string,playload []byte,header map[string]string) ([]byte,error)  {
+func HttpDoData(ctx context.Context,method string,url string,playload []byte,header map[string]string) ([]byte,error)  {
 
 	respData:=[]byte{}
 	var xError error
 
-	xClient,xClientErr:=h.NewClient(tracer)
+	var xClientErr error
+	xClient:=&http.Client{}
 
-	if xError!=nil{
-		xError=errors.New(fmt.Sprintf("go4sky NewClient Error=[%s]",xClientErr.Error()))
-		return respData,xError
+	xSkyapmTracer := go4sky.GetGlobalTracer()
+	if xSkyapmTracer!=nil{
+
+		xClient,xClientErr=h.NewClient(xSkyapmTracer,h.WithClient(xClient))
+		if xClientErr!=nil{
+			xError=errors.New(fmt.Sprintf("go4sky NewClient Error=[%s]",xClientErr.Error()))
+			return respData,xError
+		}
 	}
+
 
 	xClient.Timeout=60*time.Second
 
+	if playload==nil{
+		playload=[]byte{}
+	}
+
 	xReqDataReader := bytes.NewReader(playload)
 	xReq, xReqErr := http.NewRequest(method, url, xReqDataReader)
+
+	if ctx!=nil{
+		xReq=xReq.WithContext(ctx)
+	}
+
+
 	if xReqErr!=nil{
 		xError=errors.New(fmt.Sprintf("http.NewRequest Error=[%s]",xReqErr.Error()))
 		return respData,xError
 	}
 
 	xReq.Header.Set("User-Agent", "Mozilla/5.5 CheerIngress HttpClient")
+
+	if header==nil{
+		header=make(map[string]string)
+	}
+
 	for k,v:=range header{
 		xReq.Header.Set(k,v)
 	}
@@ -58,10 +81,10 @@ func HttpDoData(tracer *go4sky.Tracer,method string,url string,playload []byte,h
 
 	respData=xRespBody
 
-    return respData,xError
+	return respData,xError
 }
 
-func HttpDownloadFile(tracer *go4sky.Tracer,method string,url string,playload []byte,header map[string]string,filePath string) (int64,error)  {
+func HttpDownloadFile(ctx context.Context,method string,url string,playload []byte,header map[string]string,filePath string) (int64,error)  {
 
 	var xDataSize int64
 	var xError error
@@ -80,14 +103,24 @@ func HttpDownloadFile(tracer *go4sky.Tracer,method string,url string,playload []
 
 	}()
 
-	xClient,xClientErr:=h.NewClient(tracer)
+	var xClientErr error
+	xClient:=&http.Client{}
 
-	if xError!=nil{
-		xError=errors.New(fmt.Sprintf("go4sky NewClient Error=[%s]",xClientErr.Error()))
-		return xDataSize,xError
+	xSkyapmTracer := go4sky.GetGlobalTracer()
+    if xSkyapmTracer!=nil{
+
+		xClient,xClientErr=h.NewClient(xSkyapmTracer,h.WithClient(xClient))
+		if xClientErr!=nil{
+			xError=errors.New(fmt.Sprintf("go4sky NewClient Error=[%s]",xClientErr.Error()))
+			return xDataSize,xError
+		}
 	}
 
 	xClient.Timeout=600*time.Second
+
+	if playload==nil{
+	    playload=[]byte{}
+	}
 
 	xReqDataReader := bytes.NewReader(playload)
 	xReq, xReqErr := http.NewRequest(method, url, xReqDataReader)
@@ -96,7 +129,16 @@ func HttpDownloadFile(tracer *go4sky.Tracer,method string,url string,playload []
 		return xDataSize,xError
 	}
 
+	if ctx!=nil{
+		xReq=xReq.WithContext(ctx)
+	}
+
 	xReq.Header.Set("User-Agent", "Mozilla/5.5 CheerIngress HttpClient")
+
+	if header==nil{
+		header=make(map[string]string)
+	}
+
 	for k,v:=range header{
 		xReq.Header.Set(k,v)
 	}
@@ -123,7 +165,7 @@ func HttpDownloadFile(tracer *go4sky.Tracer,method string,url string,playload []
 	return xDataSize,xError
 }
 
-func HttpPostJson(tracer *go4sky.Tracer,url string, jsonData string, authData string)(string,error)  {
+func HttpPostJson(ctx context.Context,url string, jsonData string, authData string)(string,error)  {
 
 	var xRespJson string
 	var xError error
@@ -134,7 +176,7 @@ func HttpPostJson(tracer *go4sky.Tracer,url string, jsonData string, authData st
 	xHeader["Authorization"]=authData
 	xHeader["Content-Type"]="application/json; charset=utf-8"
 
-	xRespData,xError:=HttpDoData(tracer,"POST",url,xPlayload,xHeader)
+	xRespData,xError:=HttpDoData(ctx,"POST",url,xPlayload,xHeader)
 	if xError!=nil{
 		return xRespJson,xError
 	}

@@ -1,8 +1,10 @@
 package protocol
 
 import (
+	"context"
 	"errors"
 	"fmt"
+	"github.com/chwjbn/cheeringress/cheerapp"
 	"github.com/chwjbn/cheeringress/cheerlib"
 	"github.com/shirou/gopsutil/cpu"
 	"github.com/shirou/gopsutil/mem"
@@ -184,7 +186,7 @@ func (this *Exchanger) callApi(authData string, apiPath string, reqData interfac
 
 	xReqJson := cheerlib.TextStructToJson(reqData)
 
-	xRespErr, xRespData := cheerlib.NetHttpPostJson(xReqUrl, xReqJson, authData)
+	xRespData,xRespErr := cheerapp.HttpPostJson(context.TODO(),xReqUrl, xReqJson, authData)
 	if xRespErr != nil {
 		xError = errors.New(fmt.Sprintf("NetHttpPostJson Return Error=[%s]", xRespErr.Error()))
 		return xError

@@ -60,7 +60,7 @@ func ActionFetchHttpResouce(ctx *gin.Context, url string) (string, error) {
 		return xFilePath, nil
 	}
 
-	xError, _ := cheerlib.NetHttpDownloadFile(url, xFilePath)
+	_,xError := cheerapp.HttpDownloadFile(ctx.Request.Context(),"GET",url,nil,nil, xFilePath)
 	if xError != nil {
 		return "", errors.New(fmt.Sprintf("Download Url=[%s] To FilePath=[%s] Error=[%s]", url, xFilePath, xError.Error()))
 	}
