@@ -93,6 +93,7 @@ func (this *WebAppCtl) CtlIngressSiteRuleAdd(ctx *gin.Context) {
 	if xError != nil {
 		cheerlib.LogError(xError.Error())
 		this.ReturnIntenalError(ctx)
+		return
 	}
 
 	this.AppContext.AppDbSvc.UpdateNamespaceLastVer(ctx.Request.Context(), xData.NamespaceId)

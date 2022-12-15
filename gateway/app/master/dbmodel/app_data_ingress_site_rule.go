@@ -6,7 +6,7 @@ type AppDataIngressSiteRule struct {
 	NamespaceId string `bson:"namespace_id" json:"namespace_id" index:"namespace_id"`
 	SiteId      string `bson:"site_id" json:"site_id" index:"site_id"`
 
-	Title   string `bson:"title" json:"title" index:"uniq"`
+	Title   string `bson:"title" json:"title" index:"title"`
 	OrderNo int    `bson:"order_no" json:"order_no" index:"order_no"`
 
 	HttpMethod string `bson:"http_method" json:"http_method"`
