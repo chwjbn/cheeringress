@@ -42,12 +42,13 @@ func (this *DbMongoSvc) GetFirstIngressSiteByActionValue(ctx context.Context, ac
 	return xData
 }
 
-func (this *DbMongoSvc) GetIngressSiteRuleByTitle(ctx context.Context, title string) dbmodel.AppDataIngressSiteRule {
+func (this *DbMongoSvc) GetIngressSiteRuleByTitle(ctx context.Context, siteId string,title string) dbmodel.AppDataIngressSiteRule {
 
 	xData := dbmodel.AppDataIngressSiteRule{}
 
 	xWhere := make(map[string]interface{})
 	xWhere["title"] = title
+	xWhere["site_id"]=siteId
 
 	xSort := make(map[string]interface{})
 

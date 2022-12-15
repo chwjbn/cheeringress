@@ -58,7 +58,7 @@ func (this *WebAppCtl) CtlIngressSiteRuleAdd(ctx *gin.Context) {
 		return
 	}
 
-	xData := this.AppContext.AppDbSvc.GetIngressSiteRuleByTitle(ctx.Request.Context(), xRequest.Title)
+	xData := this.AppContext.AppDbSvc.GetIngressSiteRuleByTitle(ctx.Request.Context(),xRequest.SiteId, xRequest.Title)
 
 	if len(xData.DataId) > 0 {
 		this.ReturnAppError(ctx, "输入的规则名称已经存在!")
