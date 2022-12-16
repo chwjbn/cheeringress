@@ -5,7 +5,7 @@ import validation "github.com/go-ozzo/ozzo-validation"
 type IngressNamespacePageRequest struct {
 	PageRequest
 	Title string `json:"title"`
-	State string `bson:"state"`
+	State string `json:"state"`
 }
 
 type IngressNamespaceAddRequest struct {
@@ -15,7 +15,7 @@ type IngressNamespaceAddRequest struct {
 type IngressNamespaceSaveRequest struct {
 	AppDataIdRequest
 	Title string `json:"title"`
-	State string `bson:"state"`
+	State string `json:"state"`
 }
 
 func (this *IngressNamespaceAddRequest) Validate() error {

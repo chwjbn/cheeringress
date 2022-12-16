@@ -6,7 +6,7 @@ type IngressActionBackendPageRequest struct {
 	PageRequest
 	NamespaceId string `json:"namespace_id"`
 	Title       string `json:"title"`
-	State       string `bson:"state"`
+	State       string `json:"state"`
 }
 
 type IngressActionBackendAddRequest struct {
@@ -20,7 +20,7 @@ type IngressActionBackendSaveRequest struct {
 	NamespaceId string `json:"namespace_id"`
 	Title       string `json:"title"`
 	BalanceType string `json:"balance_type"`
-	State       string `bson:"state"`
+	State       string `json:"state"`
 }
 
 type IngressActionBackendNodePageRequest struct {

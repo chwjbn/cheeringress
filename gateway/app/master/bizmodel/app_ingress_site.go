@@ -6,7 +6,7 @@ type IngressSitePageRequest struct {
 	PageRequest
 	NamespaceId string `json:"namespace_id"`
 	Title       string `json:"title"`
-	State       string `bson:"state"`
+	State       string `json:"state"`
 }
 
 type IngressSiteAddRequest struct {
@@ -40,7 +40,7 @@ type IngressSiteSaveRequest struct {
 
 	ActionType  string `json:"action_type"`
 	ActionValue string `json:"action_value"`
-	State       string `bson:"state"`
+	State       string `json:"state"`
 }
 
 func (this *IngressSiteAddRequest) Validate() error {

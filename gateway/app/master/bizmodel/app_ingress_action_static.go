@@ -6,7 +6,7 @@ type IngressActionStaticPageRequest struct {
 	PageRequest
 	NamespaceId string `json:"namespace_id"`
 	Title       string `json:"title"`
-	State       string `bson:"state"`
+	State       string `json:"state"`
 }
 
 type IngressActionStaticAddRequest struct {
@@ -24,7 +24,7 @@ type IngressActionStaticSaveRequest struct {
 	ContentType string `json:"content_type"`
 	DataType    string `json:"data_type"`
 	Data        string `json:"data"`
-	State       string `bson:"state"`
+	State       string `json:"state"`
 }
 
 func (this *IngressActionStaticAddRequest) Validate() error {
