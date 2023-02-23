@@ -118,6 +118,7 @@ func (this *WebAppCtl) CtlIngressNamespaceAdd(ctx *gin.Context) {
 	if xError != nil {
 		cheerlib.LogError(xError.Error())
 		this.ReturnIntenalError(ctx)
+		return
 	}
 
 	this.ReturnAppSuccess(ctx, "app.server.msg.common.op.succ")
@@ -191,6 +192,7 @@ func (this *WebAppCtl) CtlIngressNamespaceSave(ctx *gin.Context) {
 	if xError != nil {
 		cheerlib.LogError(xError.Error())
 		this.ReturnIntenalError(ctx)
+		return
 	}
 
 	this.ReturnAppSuccess(ctx, "app.server.msg.common.op.succ")
@@ -277,8 +279,11 @@ func (this *WebAppCtl) CtlIngressNamespacePublish(ctx *gin.Context) {
 	xError = this.AppContext.AppDbSvc.PublishNamespaceConfig(ctx.Request.Context(), xRequest.DataId)
 
 	if xError != nil {
-		cheerlib.LogError(xError.Error())
-		this.ReturnIntenalError(ctx)
+
+		cheerapp.LogErrorWithContext(ctx.Request.Context(),xError.Error())
+		this.ReturnAppError(ctx,xError.Error())
+
+		return
 	}
 
 	this.ReturnAppSuccess(ctx, "app.server.msg.common.op.succ")
