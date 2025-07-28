@@ -1,7 +1,7 @@
 version: '3'
 services:
-  cheer-gateway-admin:
-    image: harbor.aiagain.com/ik-arch/cheer-ingress:prod
+  cheer-gateway-worker:
+    image: chwjbn/cheer-ingress:prod
     ports:
       - 28888:28888
     volumes:
