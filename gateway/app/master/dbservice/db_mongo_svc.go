@@ -246,7 +246,10 @@ func (this *DbMongoSvc) GetAppDataWithWhereAndOrder(ctx context.Context, data db
 func (this *DbMongoSvc) GetAppDataById(ctx context.Context, data dbmodel.IDbModelMongo) error {
 
 	xWhere := make(map[string]interface{})
-	xWhere["data_id"] = data.GetDataId()
+
+	if !strings.EqualFold(data.GetDataId(), "mix_top") {
+		xWhere["data_id"] = data.GetDataId()
+	}
 
 	xSort := make(map[string]interface{})
 	xSort["data_id"] = 1
