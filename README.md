@@ -45,7 +45,7 @@ config/webui.zip             //master节点管理页面前端资源
 | 配置项 | 配置值 | 说明 |
 | --- | --- | --- |
 | server_addr | 0.0.0.0 | 管理与配置网关工作监听地址 |
-| server_port | 16666 | 管理与配置网关工作监听端口 |
+| server_port | 26666 | 管理与配置网关工作监听端口 |
 | db_app_mongodb_uri | mongodb://127.0.0.1:30000/db_cheer_ingress | mongodb连接字符串 |
 
 - worker.yml
@@ -54,13 +54,13 @@ config/webui.zip             //master节点管理页面前端资源
 | --- | --- | --- |
 | server_addr | 0.0.0.0 | 业务工作网关监听地址 |
 | server_port | 16666 | 业务工作网关监听端口 |
-| master_host | http://127.0.0.1:16666 | master节点的访问地址 |
+| master_host | http://127.0.0.1:26666 | master节点的访问地址 |
 | namespace_id | a62624e2b29fee272fab2f02ca379b92 | 网关空间的ID，需要先安装管理端在管理端创建网关空间后复制对应的空间ID |
 
 ### 安装步骤
 **cheeringress管理与配置端需要mongodb作为数据存储服务，因此先安装mongodb**
 #### Linux环境
-- 下载发布文件：https://github.com/chwjbn/cheeringress/releases/download/v1.0.0/v1.0.0.zip
+- 下载发布文件：https://github.com/chwjbn/cheeringress/releases/download/v1.0.1/v1.0.1.zip
 - 将文件解压到 /data/app/cheeringress
 - 修改配置文件，见配置文件说明
 - 执行主程序安装
@@ -76,7 +76,7 @@ systemctl start cheeringress
 systemctl enable cheeringress
 ```
 #### Windows环境
-- 下载发布文件：https://github.com/chwjbn/cheeringress/releases/download/v1.0.0/v1.0.0.zip
+- 下载发布文件：https://github.com/chwjbn/cheeringress/releases/download/v1.0.1/v1.0.1.zip
 - 将文件解压到 D:/app/cheeringress
 - 修改配置文件，见配置文件说明
 - 执行主程序安装
